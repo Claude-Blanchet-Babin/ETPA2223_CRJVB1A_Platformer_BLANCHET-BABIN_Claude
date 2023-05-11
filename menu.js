@@ -14,9 +14,9 @@ export class menu extends Phaser.Scene{
     create(){
         //ici le code de la fonction create
         this.add.image(960, 540, 'menu');
-        var boutonPlay = this.add.image(960, 800, 'play').setInteractive();
-        this.add.image(100, 800, 'option');
-        this.add.image(1500, 800, 'quit');
+        var boutonPlay = this.add.image(960, 950, 'play').setInteractive();
+        this.add.image(300, 950, 'option');
+        this.add.image(1600, 950, 'quit');
 
         boutonPlay.once('pointerup',this.sceneOverworld,this);
     }
