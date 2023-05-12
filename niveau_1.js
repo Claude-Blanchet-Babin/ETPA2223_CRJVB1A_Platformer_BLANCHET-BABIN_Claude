@@ -2,8 +2,9 @@
 var player
 var cursors
 var a
-var z 
-var e 
+var z
+var e
+var r
 
 // variables de la carte niveau 1
 var tileset
@@ -33,45 +34,49 @@ var vitesse = false
 var combat = false
 var distance = false
 
-export class niveau_1 extends Phaser.Scene{
-    constructor(){
+// variables pour la batterie
+
+var rechargement = false
+
+export class niveau_1 extends Phaser.Scene {
+    constructor() {
         super("niveau_1");
     }
 
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
-    preload(){
+    preload() {
 
         // chargement du background
-        this.load.image("fond0","asset/niveau1/background_0.png");
-        this.load.image("fond1","asset/niveau1/background_1.png");
-        this.load.image("fond2","asset/niveau1/background_2.png");
-        this.load.image("fond3","asset/niveau1/background_3.png");
-        this.load.image("fond4","asset/niveau1/background_4.png");
+        this.load.image("fond0", "asset/niveau1/background_0.png");
+        this.load.image("fond1", "asset/niveau1/background_1.png");
+        this.load.image("fond2", "asset/niveau1/background_2.png");
+        this.load.image("fond3", "asset/niveau1/background_3.png");
+        this.load.image("fond4", "asset/niveau1/background_4.png");
 
         // chargement de la carte
-        this.load.image("Phaser_tuilesdejeu","asset/carte/tileset.png");
-        this.load.tilemapTiledJSON("carteNiveau1","asset/carte/niveau_1.json");
+        this.load.image("Phaser_tuilesdejeu", "asset/carte/tileset.png");
+        this.load.tilemapTiledJSON("carteNiveau1", "asset/carte/niveau_1.json");
 
         // chargement de l'interface utilisateur
 
         // chargement des collectables
-        this.load.image("objCombat","asset/objet/combat.png");
-        this.load.image("objVitesse","asset/objet/vitesse.png");
-        this.load.image("objDistance","asset/objet/distance.png");
+        this.load.image("objCombat", "asset/objet/combat.png");
+        this.load.image("objVitesse", "asset/objet/vitesse.png");
+        this.load.image("objDistance", "asset/objet/distance.png");
 
         // chargement des plateformes qui bougent
 
         // chargement du personnage
-        this.load.image("persoBase","asset/personnage/basique.png");
-        this.load.image("persoCombat","asset/personnage/combat.png");
-        this.load.image("persoDistance","asset/personnage/distance.png");
-        this.load.image("persoVitesse","asset/personnage/vitesse.png");
+        this.load.image("persoBase", "asset/personnage/basique.png");
+        this.load.image("persoCombat", "asset/personnage/combat.png");
+        this.load.image("persoDistance", "asset/personnage/distance.png");
+        this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
     }
 
     // création du niveau
-    create(){
+    create() {
 
         // chargement de la carte 
         carteNiveau1 = this.add.tilemap("carteNiveau1");
@@ -83,11 +88,11 @@ export class niveau_1 extends Phaser.Scene{
         );
 
         // affichage du background
-        this.add.image(0,0,"fond0").setOrigin(0,0);
-        this.add.image(0,0,"fond1").setOrigin(0,0);
-        this.add.image(0,0,"fond2").setOrigin(0,0);
-        this.add.image(0,0,"fond3").setOrigin(0,0);
-        this.add.image(0,0,"fond4").setOrigin(0,0);
+        this.add.image(0, 0, "fond0").setOrigin(0, 0);
+        this.add.image(0, 0, "fond1").setOrigin(0, 0);
+        this.add.image(0, 0, "fond2").setOrigin(0, 0);
+        this.add.image(0, 0, "fond3").setOrigin(0, 0);
+        this.add.image(0, 0, "fond4").setOrigin(0, 0);
 
         // affichage des calques
         calque_sol = carteNiveau1.createLayer(
@@ -127,9 +132,9 @@ export class niveau_1 extends Phaser.Scene{
         // créer les animations des ennemis
 
         // afficher les collectables
-        objCombat = this.physics.add.image(400,1500,"objCombat");
-        objVitesse = this.physics.add.image(1000,1500,"objVitesse");
-        objDistance = this.physics.add.image(1600,1500,"objDistance");
+        objCombat = this.physics.add.image(400, 1500, "objCombat");
+        objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
+        objDistance = this.physics.add.image(1600, 1500, "objDistance");
 
         // faire en sorte que les collectables collide avec le sol
         this.physics.add.collider(objCombat, calque_sol);
@@ -137,9 +142,9 @@ export class niveau_1 extends Phaser.Scene{
         this.physics.add.collider(objDistance, calque_sol);
 
         // faire en sorte que le joueur puisse ramasser les collectables
-        this.physics.add.overlap(player,objCombat,this.collecteCombat,null,this);
-        this.physics.add.overlap(player,objVitesse,this.collecteVitesse,null,this);
-        this.physics.add.overlap(player,objDistance,this.collecteDistance,null,this);
+        this.physics.add.overlap(player, objCombat, this.collecteCombat, null, this);
+        this.physics.add.overlap(player, objVitesse, this.collecteVitesse, null, this);
+        this.physics.add.overlap(player, objDistance, this.collecteDistance, null, this);
 
         // création de la détéction du clavier
         cursors = this.input.keyboard.createCursorKeys();
@@ -148,6 +153,7 @@ export class niveau_1 extends Phaser.Scene{
         a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         z = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         e = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // intégrer les commandes d'une manette
 
@@ -169,95 +175,148 @@ export class niveau_1 extends Phaser.Scene{
 
         // création de la caméra
         // taille de la caméra
-        this.cameras.main.setSize(1920,1080);
+        this.cameras.main.setSize(1920, 1080);
         // faire en sorte que la caméra suive le personnage et qu'elle ne sorte pas de l'écran
         this.cameras.main.startFollow(player);
-        this.cameras.main.setDeadzone(100,100);
+        this.cameras.main.setDeadzone(100, 100);
         //this.cameras.main.setBounds(0,0,4160,3456);
+
+        // intégrer une jauge
+        this.graphics = this.add.graphics();
+        this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
+        this.graphics.fillRect(20, 20, 100, 900).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
+        this.jaugeValeur = -100; //pourcentage de la jauge
+        this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
+
+        console.log(rechargement)
+        console.log(this.jaugeValeur)
+
     }
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
-    update(){
+    update() {
 
         // ajout des moyens de déplacement du personnage
-        if (cursors.left.isDown){ //si la touche gauche est appuyée
+        if (cursors.left.isDown) { //si la touche gauche est appuyée
             player.setVelocityX(-1000); //alors vitesse négative en X
 
-            }
-            else if (cursors.right.isDown){ //sinon si la touche droite est appuyée
+        }
+        else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
             player.setVelocityX(1000); //alors vitesse positive en X
 
-            }
-            else{ // sinon
+        }
+        else { // sinon
             player.setVelocityX(0); //vitesse nulle
 
-            }
-            if (cursors.up.isDown){
+        }
+        if (cursors.up.isDown) {
             //si touche haut appuyée ET que le perso touche le sol
             player.setVelocityY(-330); //alors vitesse verticale négative
             //(on saute)
         }
 
-        if(a.isDown && vitesseObtenu == true){
+        if (a.isDown && vitesseObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
             this.armureVitesse();
         }
 
-        if(z.isDown && combatObtenu == true){
+        if (z.isDown && combatObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
             this.armureCombat();
         }
 
-        if(e.isDown && distanceObtenu == true){
+        if (e.isDown && distanceObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
             this.armureDistance();
+        }
+
+        if (r.isDown) {
+            this.formeBasique();
         }
 
         // vérifier quelle armure est activée pour traverser les murs
         // armure vitesse
-        if (vitesse == true){
-            collisionBleu.active=false;
+        if (vitesse == true) {
+            collisionBleu.active = false;
         }
-        if (vitesse == false){
-            collisionBleu.active=true;
+        if (vitesse == false) {
+            collisionBleu.active = true;
         }
 
         // armure combat
-        if (combat == true){
-            collisionVert.active=false;
+        if (combat == true) {
+            collisionVert.active = false;
         }
-        if (combat == false){
-            collisionVert.active=true;
+        if (combat == false) {
+            collisionVert.active = true;
         }
 
         // armure distance
-        if (distance == true){
-            collisionRouge.active=false;
+        if (distance == true) {
+            collisionRouge.active = false;
         }
-        if (distance == false){
-            collisionRouge.active=true;
+        if (distance == false) {
+            collisionRouge.active = true;
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 10000){
+        if (player.x >= 10000) {
             this.sceneOverworld();
         }
-        
+
+        // vérifier si une armure est activé pour faire perdre de l'énergie sur la jauge
+        if (distance == true || combat == true || vitesse == true) {
+            this.jaugeValeur = this.jaugeValeur + 10 / 60; // 1/60 pour 1% par seconde
+            this.majJauge();
+        }
+
+        // vérifier si la jauge est vide, remettre l'armure de base
+        if (this.jaugeValeur >= 0) {
+            player.setTexture("persoBase")
+            basique = true;
+            distance = false;
+            combat = false;
+            vitesse = false;
+            this.jaugeValeur = 0;
+
+            rechargement = true;
+
+        }
+
+        if (this.jaugeValeur < -100) {
+            this.jaugeValeur = -100
+            rechargement = false
+        }
+
+        if (rechargement == true) {
+            this.jaugeValeur = this.jaugeValeur - 20 / 60;
+            this.majJauge();
+        }
+
     }
 
-    collecteVitesse(){
-        objVitesse.disableBody(true,true);
+    majJauge() {
+        this.graphics.clear();
+        this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
+        this.graphics.fillRect(20, 20, 100, 900).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
+        this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
+    }
+
+    collecteVitesse() {
+        objVitesse.disableBody(true, true);
         vitesseObtenu = true;
     }
 
-    collecteCombat(){
-        objCombat.disableBody(true,true);
+    collecteCombat() {
+        objCombat.disableBody(true, true);
         combatObtenu = true;
     }
 
-    collecteDistance(){
-        objDistance.disableBody(true,true);
+    collecteDistance() {
+        objDistance.disableBody(true, true);
         distanceObtenu = true;
     }
 
-    armureVitesse(){
+    armureVitesse() {
         player.setTexture("persoVitesse")
         vitesse = true
         basique = false
@@ -265,7 +324,7 @@ export class niveau_1 extends Phaser.Scene{
         distance = false
     }
 
-    armureCombat(){
+    armureCombat() {
         player.setTexture("persoCombat")
         combat = true
         basique = false
@@ -273,7 +332,7 @@ export class niveau_1 extends Phaser.Scene{
         distance = false
     }
 
-    armureDistance(){
+    armureDistance() {
         player.setTexture("persoDistance")
         distance = true
         basique = false
@@ -281,7 +340,24 @@ export class niveau_1 extends Phaser.Scene{
         vitesse = false
     }
 
-    sceneOverworld(){
+    formeBasique() {
+        player.setTexture("persoBase")
+        basique = true
+        distance = false
+        combat = false
+        vitesse = false
+    }
+
+    HorsService() {
+        player.setTexture("persoBase")
+        basique = true
+        distance = false
+        combat = false
+        vitesse = false
+        this.jaugeValeur = 0
+    }
+
+    sceneOverworld() {
         this.scene.start("overworld")
     }
 
