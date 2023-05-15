@@ -1,10 +1,22 @@
 // création des variables
+// variables du clavier
 var player
 var cursors
 var a
 var z
 var e
 var r
+var esc
+
+// variables du joueur
+var player
+var lifeUI
+var playerLife = 4
+
+// variables pour les ennemis
+var ennemiTest1
+var ennemiTest2
+var ennemiTest3
 
 // variables de la carte niveau 1
 var tileset
@@ -35,7 +47,7 @@ var combat = false
 var distance = false
 
 // variables pour la batterie
-
+var batterie
 var rechargement = false
 
 export class niveau_1 extends Phaser.Scene {
@@ -58,13 +70,32 @@ export class niveau_1 extends Phaser.Scene {
         this.load.tilemapTiledJSON("carteNiveau1", "asset/carte/niveau_1.json");
 
         // chargement de l'interface utilisateur
+        this.load.image("atterrissage", "asset/interface/atterrissage.png");
+        this.load.image("coup", "asset/interface/coup.png");
+        this.load.image("dash", "asset/interface/dash.png");
+        this.load.image("saut", "asset/interface/saut.png");
+        this.load.image("tir", "asset/interface/tir.png");
+        this.load.image("vol", "asset/interface/vol.png");
+
+        this.load.spritesheet("niveauVie", "asset/interface/brisure.png",
+        {frameWidth : 1920, frameHeight: 1080});
+
+        // chargement des écrans et de leurs boutons
+        this.load.image("pause", "asset/ecran/pause.png");
+        this.load.image("partir", "asset/ecran/partir.png");
+        this.load.image("recommencer", "asset/ecran/recommencer.png");
+        this.load.image("reprendre", "asset/ecran/reprendre.png");
+
+        this.load.image("gameOver", "asset/ecran/game_over.png");
 
         // chargement des collectables
         this.load.image("objCombat", "asset/objet/combat.png");
         this.load.image("objVitesse", "asset/objet/vitesse.png");
         this.load.image("objDistance", "asset/objet/distance.png");
+        this.load.image("batterie", "asset/objet/batterie.png");
 
         // chargement des plateformes qui bougent
+        this.load.image("plateforme", "asset/objet/plateforme.png");
 
         // chargement du personnage
         this.load.image("persoBase", "asset/personnage/basique.png");
@@ -73,6 +104,9 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
+        this.load.image("red", "asset/ennemi/rouge.png");
+        this.load.image("blue", "asset/ennemi/bleu.png");
+        this.load.image("green", "asset/ennemi/vert.png");
     }
 
     // création du niveau
@@ -123,23 +157,34 @@ export class niveau_1 extends Phaser.Scene {
         // affichage du personnage
         player = this.physics.add.sprite(100, 1500, "persoBase");
 
-        // reprendre l'affichage du des calques en mettant le decor
+        // reprendre l'affichage des calques en mettant le decor
 
         // afficher les animations du personnage lorsqu'il se déplace
 
         // affichage des ennemis
+        ennemiTest1 = this.physics.add.image(2300, 1500, "red");
+        ennemiTest2 = this.physics.add.image(2800, 1500, "blue");
+        ennemiTest3 = this.physics.add.image(3200, 1500, "green");
 
         // créer les animations des ennemis
+
+        // faire en sorte que les ennemis colide avec le sol
+        this.physics.add.collider(ennemiTest1, calque_sol);
+        this.physics.add.collider(ennemiTest2, calque_sol);
+        this.physics.add.collider(ennemiTest3, calque_sol);
 
         // afficher les collectables
         objCombat = this.physics.add.image(400, 1500, "objCombat");
         objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
         objDistance = this.physics.add.image(1600, 1500, "objDistance");
 
+        batterie = this.physics.add.image(2000, 1500, "batterie");
+
         // faire en sorte que les collectables collide avec le sol
         this.physics.add.collider(objCombat, calque_sol);
         this.physics.add.collider(objVitesse, calque_sol);
         this.physics.add.collider(objDistance, calque_sol);
+        this.physics.add.collider(batterie, calque_sol);
 
         // faire en sorte que le joueur puisse ramasser les collectables
         this.physics.add.overlap(player, objCombat, this.collecteCombat, null, this);
@@ -154,6 +199,7 @@ export class niveau_1 extends Phaser.Scene {
         z = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         e = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESCAPE);
 
         // intégrer les commandes d'une manette
 
@@ -189,9 +235,43 @@ export class niveau_1 extends Phaser.Scene {
         this.jaugeValeur = -100; //pourcentage de la jauge
         this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
 
-        console.log(rechargement)
-        console.log(this.jaugeValeur)
+        // affichage de l'interface
+        lifeUI = this.add.sprite(960,540, "niveauVie").setScrollFactor(0);
 
+        // affichage de l'écran de pause et des boutons
+        this.add.image(960, 540, 'pause').setVisible(false).setScrollFactor(0);
+        var boutonPartir = this.add.image(300, 950, 'partir').setVisible(false).setInteractive().setScrollFactor(0);
+        var boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0);
+        var boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0);
+
+        // affichage de l'écran de mort
+        this.add.image(960, 540, 'gameOver').setVisible(false).setScrollFactor(0);
+
+        // création des nieaux de vie
+        this.anims.create({
+            key: 'vie0',
+            frames: [{ key: 'niveauVie' , frame :  0}],
+        })
+
+        this.anims.create({
+            key: 'vie1',
+            frames: [{ key: 'niveauVie' , frame :  1}],
+        })
+
+        this.anims.create({
+            key: 'vie2',
+            frames: [{ key: 'niveauVie' , frame :  2}],
+        })
+
+        this.anims.create({
+            key: 'vie3',
+            frames: [{ key: 'niveauVie' , frame :  3}],
+        })
+
+        this.anims.create({
+            key: 'vie4',
+            frames: [{ key: 'niveauVie' , frame :  4}],
+        })
     }
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
