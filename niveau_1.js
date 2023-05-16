@@ -1,17 +1,32 @@
 // création des variables
 // variables du clavier
-var player
 var cursors
 var a
 var z
 var e
 var r
 var esc
+var shift
+var space
+var lockTouche = false
 
 // variables du joueur
 var player
 var lifeUI
 var playerLife = 4
+var playerDegat = false
+var playerOpacity = false
+var playerVitesse = 700
+var playerSaut = 1000
+var gameOver = false
+var respawnX = 100
+var respawnY = 1500
+var capa_Atterrissage
+var capa_Coup
+var capa_Dash
+var capa_Saut
+var capa_Tir
+var capa_Vol
 
 // variables pour les ennemis
 var ennemiTest1
@@ -50,9 +65,20 @@ var distance = false
 var batterie
 var rechargement = false
 
+// variables pour les écrans d'interface
+var ecranPause
+var ecranMort
+var boutonPartir
+var boutonRecommencer
+var boutonReprendre
+
 export class niveau_1 extends Phaser.Scene {
     constructor() {
         super("niveau_1");
+    }
+
+    init(data){
+        playerLife = data.transfertVie
     }
 
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
@@ -112,6 +138,10 @@ export class niveau_1 extends Phaser.Scene {
     // création du niveau
     create() {
 
+        playerLife = 4;
+        gameOver = false;
+        playerDegat = false;
+
         // chargement de la carte 
         carteNiveau1 = this.add.tilemap("carteNiveau1");
 
@@ -156,6 +186,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // affichage du personnage
         player = this.physics.add.sprite(100, 1500, "persoBase");
+        player.setGravityY(800);
 
         // reprendre l'affichage des calques en mettant le decor
 
@@ -173,12 +204,18 @@ export class niveau_1 extends Phaser.Scene {
         this.physics.add.collider(ennemiTest2, calque_sol);
         this.physics.add.collider(ennemiTest3, calque_sol);
 
+        // test de perte de vie en touchant un ennemi
+        this.physics.add.collider(player, ennemiTest1, this.degat, null, this);
+
         // afficher les collectables
         objCombat = this.physics.add.image(400, 1500, "objCombat");
         objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
         objDistance = this.physics.add.image(1600, 1500, "objDistance");
 
         batterie = this.physics.add.image(2000, 1500, "batterie");
+
+        // test de collecte de batterie
+        this.physics.add.overlap(player, batterie, this.collecteBatterie, null, this);
 
         // faire en sorte que les collectables collide avec le sol
         this.physics.add.collider(objCombat, calque_sol);
@@ -199,7 +236,9 @@ export class niveau_1 extends Phaser.Scene {
         z = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         e = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-        esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESCAPE);
+        esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        shift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // intégrer les commandes d'une manette
 
@@ -235,17 +274,31 @@ export class niveau_1 extends Phaser.Scene {
         this.jaugeValeur = -100; //pourcentage de la jauge
         this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
 
+        // afficher les cooldown de capacités
+        capa_Atterrissage = this.add.image(250, 100, 'atterrissage').setVisible(false).setScrollFactor(0);
+        capa_Coup = this.add.image(450, 100,'coup').setVisible(false).setScrollFactor(0);
+        capa_Dash = this.add.image(250, 100, 'dash').setVisible(false).setScrollFactor(0);
+        capa_Saut = this.add.image(450, 100, 'saut').setVisible(false).setScrollFactor(0);
+        capa_Tir = this.add.image(450, 100, 'tir').setVisible(false).setScrollFactor(0);
+        capa_Vol = this.add.image(250, 100, 'vol').setVisible(false).setScrollFactor(0);
+
         // affichage de l'interface
         lifeUI = this.add.sprite(960,540, "niveauVie").setScrollFactor(0);
 
-        // affichage de l'écran de pause et des boutons
-        this.add.image(960, 540, 'pause').setVisible(false).setScrollFactor(0);
-        var boutonPartir = this.add.image(300, 950, 'partir').setVisible(false).setInteractive().setScrollFactor(0);
-        var boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0);
-        var boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0);
-
         // affichage de l'écran de mort
-        this.add.image(960, 540, 'gameOver').setVisible(false).setScrollFactor(0);
+        ecranMort = this.add.image(960, 540, 'gameOver').setVisible(false).setScrollFactor(0);
+
+
+        // affichage de l'écran de pause et des boutons
+        ecranPause = this.add.image(960, 540, 'pause').setVisible(false).setScrollFactor(0);
+        boutonPartir = this.add.image(300, 950, 'partir').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
+        boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
+        boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
+
+        boutonPartir.once('pointerup',this.sceneOverworld,this);
+        boutonRecommencer.once('pointerup',this.sceneNiveau1,this);
+        boutonReprendre.once('pointerup',this.Reprendre,this);
+
 
         // création des nieaux de vie
         this.anims.create({
@@ -277,23 +330,42 @@ export class niveau_1 extends Phaser.Scene {
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
 
+        console.log(playerLife)
+
         // ajout des moyens de déplacement du personnage
-        if (cursors.left.isDown) { //si la touche gauche est appuyée
-            player.setVelocityX(-1000); //alors vitesse négative en X
-
+        if (cursors.left.isDown && lockTouche == false){ //si la touche gauche est appuyée
+            player.setVelocityX(- playerVitesse); //alors vitesse négative en X
+            //player.anims.play('left', true); //et animation => gauche
         }
-        else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
-            player.setVelocityX(1000); //alors vitesse positive en X
-
+        else if (cursors.right.isDown && lockTouche == false){ //sinon si la touche droite est appuyée
+            player.setVelocityX(playerVitesse); //alors vitesse positive en X
+            //player.anims.play('right', true); //et animation => droite
         }
-        else { // sinon
+        else{ // sinon
             player.setVelocityX(0); //vitesse nulle
-
+            //player.anims.play('turn'); //animation fait face caméra
         }
-        if (cursors.up.isDown) {
+        if (cursors.up.isDown && player.body.blocked.down && lockTouche == false){
             //si touche haut appuyée ET que le perso touche le sol
-            player.setVelocityY(-330); //alors vitesse verticale négative
+            player.setVelocityY(-playerSaut); //alors vitesse verticale négative
             //(on saute)
+        }
+
+        // animation de la jauge de vie
+        if (playerLife == 4){
+            lifeUI.anims.play('vie0', true);
+        }
+        if (playerLife == 3){
+            lifeUI.anims.play('vie1', true);
+        }
+        if (playerLife == 2){
+            lifeUI.anims.play('vie2', true);
+        }
+        if (playerLife == 1){
+            lifeUI.anims.play('vie3', true);
+        }
+        if (playerLife == 0){
+            lifeUI.anims.play('vie4', true);
         }
 
         if (a.isDown && vitesseObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
@@ -338,7 +410,7 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 10000) {
+        if (player.x >= 15000) {
             this.sceneOverworld();
         }
 
@@ -347,6 +419,48 @@ export class niveau_1 extends Phaser.Scene {
             this.jaugeValeur = this.jaugeValeur + 10 / 60; // 1/60 pour 1% par seconde
             this.majJauge();
         }
+
+        // nécessaire pour faire en sorte que le joueur puisse reprendre de la batterie lorsqu'il n'a pas d'armure
+        if (basique==true){
+            this.majJauge();
+        }
+
+        // activation des capacités selon l'armure équipé
+        // armure de vitesse
+        // dash
+        if (vitesse == true && shift.isDown){
+
+        }
+
+        // double saut
+        if (vitesse == true && space.isDown){
+
+        }
+
+        // armure de combat
+        // coup
+        if (combat == true && shift.isDown){
+
+        }
+
+        // atterrissage
+        if (combat == true && Phaser.Input.Keyboard.JustDown(space)){
+            player.setVelocityY(3000)
+            this.jaugeValeur = this.jaugeValeur + 15
+        }
+
+        // armure à distance
+        // tir
+        if (distance == true && shift.isDown){
+
+        }
+
+        // vol
+        if (distance == true && Phaser.Input.Keyboard.JustDown(space)){
+            player.setGravityY(1)
+            this.jaugeValeur = this.jaugeValeur + 15
+        }
+
 
         // vérifier si la jauge est vide, remettre l'armure de base
         if (this.jaugeValeur >= 0) {
@@ -359,6 +473,13 @@ export class niveau_1 extends Phaser.Scene {
 
             rechargement = true;
 
+            capa_Atterrissage.setVisible(false);
+            capa_Coup.setVisible(false);
+            capa_Dash.setVisible(false);
+            capa_Saut.setVisible(false);
+            capa_Tir.setVisible(false);
+            capa_Vol.setVisible(false);
+
         }
 
         if (this.jaugeValeur < -100) {
@@ -369,6 +490,45 @@ export class niveau_1 extends Phaser.Scene {
         if (rechargement == true) {
             this.jaugeValeur = this.jaugeValeur - 20 / 60;
             this.majJauge();
+        }
+
+        // mettre en place le système de checkpoint
+        // faire réaparaitre le joueur lorsqu'il tombe dans le vide
+        if (player.y > 1900){
+            player.x = respawnX
+            player.y = respawnY
+        }
+
+        // premier checkpoint
+        if (player.x > 7000){
+            respawnX = 7000
+        }
+
+        // mise en place de la pause
+        if(esc.isDown){
+            boutonPartir.setVisible(true);
+            boutonRecommencer.setVisible(true);
+            boutonReprendre.setVisible(true);
+            ecranPause.setVisible(true);
+        }
+
+        // mise en place du game over
+        if (playerLife == 0){
+            gameOver = true;
+        }
+
+        if(gameOver){
+            boutonPartir.setVisible(true);
+            boutonRecommencer.setVisible(true);
+            ecranMort.setVisible(true);
+            return;
+        }
+
+        // retirer l'écran de game Over si la vie est égale à 4
+        if(playerLife == 4){
+            boutonPartir.setVisible(false);
+            boutonRecommencer.setVisible(false);
+            ecranMort.setVisible(false); 
         }
 
     }
@@ -402,6 +562,15 @@ export class niveau_1 extends Phaser.Scene {
         basique = false
         combat = false
         distance = false
+        playerLife = 4
+
+        // afficher l'interface correspondant à l'armure
+        capa_Atterrissage.setVisible(false);
+        capa_Coup.setVisible(false);
+        capa_Dash.setVisible(true);
+        capa_Saut.setVisible(true);
+        capa_Tir.setVisible(false);
+        capa_Vol.setVisible(false);
     }
 
     armureCombat() {
@@ -410,6 +579,15 @@ export class niveau_1 extends Phaser.Scene {
         basique = false
         vitesse = false
         distance = false
+        playerLife = 4
+
+        // afficher l'interface correspondant à l'armure
+        capa_Atterrissage.setVisible(true);
+        capa_Coup.setVisible(true);
+        capa_Dash.setVisible(false);
+        capa_Saut.setVisible(false);
+        capa_Tir.setVisible(false);
+        capa_Vol.setVisible(false);
     }
 
     armureDistance() {
@@ -418,6 +596,15 @@ export class niveau_1 extends Phaser.Scene {
         basique = false
         combat = false
         vitesse = false
+        playerLife = 4
+
+        // afficher l'interface correspondant à l'armure
+        capa_Atterrissage.setVisible(false);
+        capa_Coup.setVisible(false);
+        capa_Dash.setVisible(false);
+        capa_Saut.setVisible(false);
+        capa_Tir.setVisible(true);
+        capa_Vol.setVisible(true);
     }
 
     formeBasique() {
@@ -426,6 +613,14 @@ export class niveau_1 extends Phaser.Scene {
         distance = false
         combat = false
         vitesse = false
+
+        // afficher l'interface correspondant à l'armure
+        capa_Atterrissage.setVisible(false);
+        capa_Coup.setVisible(false);
+        capa_Dash.setVisible(false);
+        capa_Saut.setVisible(false);
+        capa_Tir.setVisible(false);
+        capa_Vol.setVisible(false);
     }
 
     HorsService() {
@@ -435,10 +630,106 @@ export class niveau_1 extends Phaser.Scene {
         combat = false
         vitesse = false
         this.jaugeValeur = 0
+
+        // afficher l'interface correspondant à l'armure
+        capa_Atterrissage.setVisible(false);
+        capa_Coup.setVisible(false);
+        capa_Dash.setVisible(false);
+        capa_Saut.setVisible(false);
+        capa_Tir.setVisible(false);
+        capa_Vol.setVisible(false);
     }
 
     sceneOverworld() {
         this.scene.start("overworld")
+    }
+
+    sceneNiveau1() {
+        this.scene.start("niveau_1",{
+            transfertVie : 4,
+            entrance : "restart",
+        })
+    }
+
+    Reprendre() {
+        boutonPartir.setVisible(false);
+        boutonRecommencer.setVisible(false);
+        boutonReprendre.setVisible(false);
+        ecranPause.setVisible(false);
+    }
+
+    degat(){
+        // le joueur perd de la batterie si une armure est active
+
+        // vérifier que le cooldown de degat est disponible
+        if (playerDegat == false && basique== false){
+            
+            // retirer de la vie au joueur
+            // répercuter directement dans la jauge de vie
+            this.jaugeValeur = this.jaugeValeur + 15;
+            playerDegat = true;
+            playerOpacity = true;
+    
+            // montrer l'invulnérabilité du personnage ne le faisant clignoter avec l'opacité
+            this.time.addEvent({        
+                delay : 100,
+                callback : () => {
+                    if(playerOpacity){
+                        player.alpha = 0.25;
+                        playerOpacity = false
+                    }
+                    else {
+                        player.alpha = 1;
+                        playerOpacity = true;
+                    }
+                },
+                repeat : 19
+            })
+    
+            // activation du cooldown de degat
+            this.time.delayedCall(2000, () => {
+                playerDegat = false;
+                player.alpha = 1;
+            });  
+        }
+
+        // le joueur perd de la vie s'il n'a pas d'armure
+
+        if (playerDegat == false && basique== true){
+            
+            // retirer de la vie au joueur
+            // répercuter directement dans la jauge de vie
+            playerLife = playerLife - 1;
+            playerDegat = true;
+            playerOpacity = true;
+    
+            // montrer l'invulnérabilité du personnage ne le faisant clignoter avec l'opacité
+            this.time.addEvent({        
+                delay : 100,
+                callback : () => {
+                    if(playerOpacity){
+                        player.alpha = 0.25;
+                        playerOpacity = false
+                    }
+                    else {
+                        player.alpha = 1;
+                        playerOpacity = true;
+                    }
+                },
+                repeat : 19
+            })
+    
+            // activation du cooldown de degat
+            this.time.delayedCall(2000, () => {
+                playerDegat = false;
+                player.alpha = 1;
+            });  
+        }
+    }
+
+    collecteBatterie(){
+        batterie.disableBody(true, true);
+        this.jaugeValeur= this.jaugeValeur - 20
     }
 
 };
