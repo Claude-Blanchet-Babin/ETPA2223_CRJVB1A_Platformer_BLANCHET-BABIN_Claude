@@ -17,6 +17,7 @@ var playerLife = 4
 var playerDegat = false
 var playerOpacity = false
 var playerVitesse = 700
+var playerGravity = 1200
 var playerSaut = 1000
 var gameOver = false
 var respawnX = 100
@@ -28,10 +29,35 @@ var capa_Saut
 var capa_Tir
 var capa_Vol
 
+var actif_Atterrisage = false
+var actif_Coup = false
+var actif_Dash = false
+var actif_Saut = false
+var actif_Tir = false
+var actif_Vol = false
+
+var tir_gauche = false
+var tir_droit = false
+
+var dash_droit = false
+var dash_gauche = false
+
+var cld_Atterrisage = false
+var cld_Coup = false
+var cld_Dash = false
+var cld_Saut = false
+var cld_Tir = false
+var cld_Vol = false
+
+var munition
+
 // variables pour les ennemis
-var ennemiTest1
-var ennemiTest2
-var ennemiTest3
+var position_ennemi_A
+var groupe_ennemi_A
+
+var distance
+var distanceX
+var distanceY
 
 // variables de la carte niveau 1
 var tileset
@@ -133,6 +159,9 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("red", "asset/ennemi/rouge.png");
         this.load.image("blue", "asset/ennemi/bleu.png");
         this.load.image("green", "asset/ennemi/vert.png");
+
+        // chargement des projectiles
+        this.load.image("projectile", "asset/objet/projectile.png");
     }
 
     // création du niveau
@@ -186,33 +215,49 @@ export class niveau_1 extends Phaser.Scene {
 
         // affichage du personnage
         player = this.physics.add.sprite(100, 1500, "persoBase");
-        player.setGravityY(800);
+        player.setGravityY(playerGravity);
 
         // reprendre l'affichage des calques en mettant le decor
 
         // afficher les animations du personnage lorsqu'il se déplace
 
         // affichage des ennemis
-        ennemiTest1 = this.physics.add.image(2300, 1500, "red");
-        ennemiTest2 = this.physics.add.image(2800, 1500, "blue");
-        ennemiTest3 = this.physics.add.image(3200, 1500, "green");
+        // créer un groupe d'ennemi à partir d'un calque
+        position_ennemi_A = carteNiveau1.getObjectLayer("ennemi_A_spawn");
+
+        // créer un groupe d'ennemi
+        groupe_ennemi_A = this.physics.add.group();
+
+        // faire apparaitre un ennemi selon les emplacements et leur donner une gravité
+        position_ennemi_A.objects.forEach(ennemi => {
+            groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
+        })
+
+        // ajouter une collision entre les ennemis et le sol
+        this.physics.add.collider(groupe_ennemi_A, calque_sol);
+
+        console.log(groupe_ennemi_A.children.entries[0]);
+
+        // agir sur un seul ennemi  // children.each pour agir sur tous
+        //groupe_ennemi_A.children.entries[0].setVelocityX(-500);
 
         // créer les animations des ennemis
 
-        // faire en sorte que les ennemis colide avec le sol
-        this.physics.add.collider(ennemiTest1, calque_sol);
-        this.physics.add.collider(ennemiTest2, calque_sol);
-        this.physics.add.collider(ennemiTest3, calque_sol);
+        // faire perdre de la vie au joueur lorsqu'un ennemi le touche
+        this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
 
-        // test de perte de vie en touchant un ennemi
-        this.physics.add.collider(player, ennemiTest1, this.degat, null, this);
+        // création d'un groupe balle
+        munition = this.physics.add.group();
+
+        // faire en sorte que les balles touchent les ennemis
+        this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
 
         // afficher les collectables
         objCombat = this.physics.add.image(400, 1500, "objCombat");
         objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
         objDistance = this.physics.add.image(1600, 1500, "objDistance");
 
-        batterie = this.physics.add.image(2000, 1500, "batterie");
+        batterie = this.physics.add.group();
 
         // test de collecte de batterie
         this.physics.add.overlap(player, batterie, this.collecteBatterie, null, this);
@@ -277,8 +322,8 @@ export class niveau_1 extends Phaser.Scene {
         // afficher les cooldown de capacités
         capa_Atterrissage = this.add.image(250, 100, 'atterrissage').setVisible(false).setScrollFactor(0);
         capa_Coup = this.add.image(450, 100,'coup').setVisible(false).setScrollFactor(0);
-        capa_Dash = this.add.image(250, 100, 'dash').setVisible(false).setScrollFactor(0);
-        capa_Saut = this.add.image(450, 100, 'saut').setVisible(false).setScrollFactor(0);
+        capa_Dash = this.add.image(450, 100, 'dash').setVisible(false).setScrollFactor(0);
+        capa_Saut = this.add.image(250, 100, 'saut').setVisible(false).setScrollFactor(0);
         capa_Tir = this.add.image(450, 100, 'tir').setVisible(false).setScrollFactor(0);
         capa_Vol = this.add.image(250, 100, 'vol').setVisible(false).setScrollFactor(0);
 
@@ -325,6 +370,8 @@ export class niveau_1 extends Phaser.Scene {
             key: 'vie4',
             frames: [{ key: 'niveauVie' , frame :  4}],
         })
+
+        
     }
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
@@ -368,6 +415,7 @@ export class niveau_1 extends Phaser.Scene {
             lifeUI.anims.play('vie4', true);
         }
 
+        // lancer le changement d'armure
         if (a.isDown && vitesseObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
             this.armureVitesse();
         }
@@ -425,40 +473,247 @@ export class niveau_1 extends Phaser.Scene {
             this.majJauge();
         }
 
+        // vérification de la distance entre un ennemi et le joueur
+        // sur l'axe X
+
+
+        // sur l'axe Y
+
         // activation des capacités selon l'armure équipé
         // armure de vitesse
-        // dash
-        if (vitesse == true && shift.isDown){
+        // dash à droite
+        if (vitesse == true && cld_Dash == false && shift.isDown && Phaser.Input.Keyboard.JustDown(cursors.right)){
+            actif_Dash=true;
+            cld_Dash=true;
+            dash_droit=true;
+            capa_Dash.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
 
+            // réglage de la durée de la capacité
+            this.time.delayedCall(1000, () => {
+                actif_Dash = false;
+                dash_droit = false;
+                player.setGravityY(playerGravity);
+            });
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Dash = false;
+                capa_Dash.alpha = 1;
+            });
+        }
+
+        // activation de la capacité
+        if(actif_Dash == true && dash_droit == true){
+            player.setGravityY(0);
+            player.setVelocityY(0);
+            player.setVelocityX(1000);
+        }
+
+        // dash à gauche
+        if (vitesse == true && cld_Dash == false && shift.isDown && Phaser.Input.Keyboard.JustDown(cursors.left)){
+            actif_Dash=true;
+            cld_Dash=true;
+            dash_gauche=true;
+            capa_Dash.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            // réglage de la durée de la capacité
+            this.time.delayedCall(1000, () => {
+                actif_Dash = false;
+                dash_gauche = false;
+                player.setGravityY(playerGravity);
+            });
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Dash = false;
+                capa_Dash.alpha = 1;
+            });
+        }
+
+        // activation de la capacité
+        if(actif_Dash == true && dash_gauche == true){
+            player.setGravityY(0);
+            player.setVelocityY(0);
+            player.setVelocityX(-1000);
         }
 
         // double saut
-        if (vitesse == true && space.isDown){
+        if (vitesse == true && cld_Saut == false && space.isDown){
+            actif_Saut=true;
+            cld_Saut=true;
+            capa_Saut.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
 
+            // réglage de la durée de la capacité
+            this.time.delayedCall(1, () => {
+                actif_Saut = false;
+            });
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Saut = false;
+                capa_Saut.alpha = 1;
+            });
         }
+
+        // activation de la capacité
+        if (actif_Saut == true){
+            player.setVelocityY(-playerSaut);
+        }
+
 
         // armure de combat
         // coup
-        if (combat == true && shift.isDown){
+        if (combat == true && cld_Coup == false && shift.isDown){
+            cld_Coup = true;
+            capa_Coup.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            groupe_ennemi_A.getChildren().forEach(function(enemy){
+                distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                if(distance<300){
+                    this.frappeEnnemi(enemy);
+                }
+            },this)
+    
+            console.log(distance);
+
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Coup = false;
+                capa_Coup.alpha = 1;
+            });
 
         }
 
         // atterrissage
-        if (combat == true && Phaser.Input.Keyboard.JustDown(space)){
-            player.setVelocityY(3000)
-            this.jaugeValeur = this.jaugeValeur + 15
+        if (combat == true && cld_Atterrisage == false && Phaser.Input.Keyboard.JustDown(space)){
+            actif_Atterrisage=true;
+            cld_Atterrisage=true;
+            capa_Atterrissage.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            playerDegat = true;
+
+            // réglage de la durée de la capacité
+            this.time.delayedCall(1500, () => {
+                actif_Atterrisage = false;
+                playerDegat = false;
+            });  
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Atterrisage = false;
+                capa_Atterrissage.alpha = 1;
+            });  
         }
 
-        // armure à distance
-        // tir
-        if (distance == true && shift.isDown){
+        
 
+        // activation de la capacité
+        if (actif_Atterrisage == true){
+            player.setVelocityY(3000);
+
+            groupe_ennemi_A.getChildren().forEach(function(enemy){
+                distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                distanceX = Math.abs(player.x - enemy.x);
+                distanceY = Math.abs(player.y - enemy.y);
+
+                if(distanceY <= 257 && distanceX <=200){
+                    this.frappeEnnemi(enemy);
+                }
+
+                console.log(distanceX)
+
+            },this)
+        }
+
+
+        // armure à distance
+        // tir à droite
+        if (distance == true && cld_Tir == false && shift.isDown && cursors.right.isDown){
+            actif_Tir= true;
+            tir_droit = true;
+            cld_Tir = true;
+            capa_Tir.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            munition.create(player.x, player.y, "projectile").body.setVelocityX(900);
+
+            // réglage de la durée de la capacité
+            this.time.delayedCall(10, () => {
+                actif_Tir = false;
+                tir_droit=false;
+            });
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(1000, () => {
+                cld_Tir = false;
+                capa_Tir.alpha = 1;
+            });
+        }
+
+        // ativation d'un léger recul avec le tir
+        if (actif_Tir==true && tir_droit== true){
+            player.setVelocityX(-1000)
+        }
+
+        // tir à gauche
+        if (distance == true && cld_Tir == false && shift.isDown && cursors.left.isDown){
+            cld_Tir = true;
+            tir_gauche = true;
+            capa_Tir.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            munition.create(player.x, player.y, "projectile").body.setVelocityX(-900);
+
+            // réglage de la durée de la capacité
+            this.time.delayedCall(10, () => {
+                actif_Tir = false;
+                tir_gauche=false;
+            });
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(1000, () => {
+                cld_Tir = false;
+                capa_Tir.alpha = 1;
+            });
+        }
+
+        // ativation d'un léger recul avec le tir
+        if (actif_Tir==true && tir_gauche== true){
+            player.setVelocityX(1000)
         }
 
         // vol
-        if (distance == true && Phaser.Input.Keyboard.JustDown(space)){
-            player.setGravityY(1)
-            this.jaugeValeur = this.jaugeValeur + 15
+        if (distance == true && cld_Vol == false && Phaser.Input.Keyboard.JustDown(space)){
+            actif_Vol=true;
+            cld_Vol = true;
+            playerVitesse = 200;
+            capa_Vol.alpha = 0.5;
+            this.jaugeValeur = this.jaugeValeur + 15;
+
+            // réglage de la durée de la capacité
+            this.time.delayedCall(1000, () => {
+                actif_Vol = false;
+                playerVitesse = 700;
+            });  
+
+            // réglage du cooldown de la capacité
+            this.time.delayedCall(4000, () => {
+                cld_Vol = false;
+                capa_Vol.alpha = 1;
+            });
+        }
+
+        // activation de la capacité
+        if(actif_Vol==true){
+            player.setVelocityY(30);
         }
 
 
@@ -524,12 +779,6 @@ export class niveau_1 extends Phaser.Scene {
             return;
         }
 
-        // retirer l'écran de game Over si la vie est égale à 4
-        if(playerLife == 4){
-            boutonPartir.setVisible(false);
-            boutonRecommencer.setVisible(false);
-            ecranMort.setVisible(false); 
-        }
 
     }
 
@@ -727,9 +976,23 @@ export class niveau_1 extends Phaser.Scene {
         }
     }
 
-    collecteBatterie(){
+    collecteBatterie(player,batterie){
         batterie.disableBody(true, true);
         this.jaugeValeur= this.jaugeValeur - 20
     }
+
+    degatEnnemi (balle,ennemi){
+        balle.disableBody(true,true);
+        ennemi.disableBody(true,true);
+
+        batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+    }
+
+    frappeEnnemi (ennemi){
+        ennemi.destroy();
+
+        batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+    }
+
 
 };

@@ -73,6 +73,7 @@ export class overworld extends Phaser.Scene{
 
         // affichage du personnage
         player = this.physics.add.sprite(100, 1500, "persoBase");
+        player.setGravityY(1200);
 
         // reprendre l'affichage du des calques en mettant le decor
 
@@ -123,11 +124,6 @@ export class overworld extends Phaser.Scene{
             }
             else{ // sinon
             player.setVelocityX(0); //vitesse nulle
-            }
-            if (cursors.up.isDown){
-            //si touche haut appuyée ET que le perso touche le sol
-            player.setVelocityY(-330); //alors vitesse verticale négative
-            //(on saute)
             }
         
     }
