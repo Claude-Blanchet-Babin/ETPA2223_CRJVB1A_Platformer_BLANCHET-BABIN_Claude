@@ -13,15 +13,19 @@ var lockTouche = false
 // variables du joueur
 var player
 var lifeUI
-var playerLife = 4
 var playerDegat = false
 var playerOpacity = false
+var gameOver = false
+var munition
+var playerLife = 4
 var playerVitesse = 700
+var majVitesse = 700
 var playerGravity = 1200
 var playerSaut = 1000
-var gameOver = false
 var respawnX = 100
 var respawnY = 1500
+
+// bloc d'affichage des capacités
 var capa_Atterrissage
 var capa_Coup
 var capa_Dash
@@ -29,6 +33,7 @@ var capa_Saut
 var capa_Tir
 var capa_Vol
 
+// voir si la compétence est active
 var actif_Atterrisage = false
 var actif_Coup = false
 var actif_Dash = false
@@ -42,6 +47,7 @@ var tir_droit = false
 var dash_droit = false
 var dash_gauche = false
 
+// voir si le cooldown est actif
 var cld_Atterrisage = false
 var cld_Coup = false
 var cld_Dash = false
@@ -49,7 +55,43 @@ var cld_Saut = false
 var cld_Tir = false
 var cld_Vol = false
 
-var munition
+// variables permettant de changer les valeurs des capacités
+var cooldownDash = 3000
+var tempsDash = 1000
+var vitesseDash = 1000
+
+var cooldownSaut = 3000
+var tempsSaut = 1
+var hauteurSaut = 1000
+
+var cooldownCoup = 3000
+
+var cooldownAtterrissage = 3000
+var tempsAtterrissage = 1500
+var vitesseAtterrissage = 3000
+
+var cooldownTir = 1000
+var vitesseTir = 900
+var tempsRecul = 10
+var vitesseRecul = 1000
+
+var cooldownVol = 3000
+var tempsVol = 1000
+var vitesseVol = 200
+var chuteVol = 30
+
+// variables permettant de changer les valeurs de l'utilisation de la batterie
+var consommation = 10
+var regeneration = 20
+
+var activDash = 15
+var activSaut = 15
+var activAtterrissage = 15
+var activCoup = 15
+var activVol = 15
+var activTir =15
+
+var regenBatterie = 20
 
 // variables pour les ennemis
 var position_ennemi_A
@@ -259,7 +301,7 @@ export class niveau_1 extends Phaser.Scene {
 
         batterie = this.physics.add.group();
 
-        // test de collecte de batterie
+        //collecte de batterie
         this.physics.add.overlap(player, batterie, this.collecteBatterie, null, this);
 
         // faire en sorte que les collectables collide avec le sol
@@ -464,7 +506,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // vérifier si une armure est activé pour faire perdre de l'énergie sur la jauge
         if (distance == true || combat == true || vitesse == true) {
-            this.jaugeValeur = this.jaugeValeur + 10 / 60; // 1/60 pour 1% par seconde
+            this.jaugeValeur = this.jaugeValeur + consommation / 60; // 1/60 pour 1% par seconde
             this.majJauge();
         }
 
@@ -487,17 +529,17 @@ export class niveau_1 extends Phaser.Scene {
             cld_Dash=true;
             dash_droit=true;
             capa_Dash.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activDash;
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(tempsDash, () => {
                 actif_Dash = false;
                 dash_droit = false;
                 player.setGravityY(playerGravity);
             });
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownDash, () => {
                 cld_Dash = false;
                 capa_Dash.alpha = 1;
             });
@@ -507,7 +549,7 @@ export class niveau_1 extends Phaser.Scene {
         if(actif_Dash == true && dash_droit == true){
             player.setGravityY(0);
             player.setVelocityY(0);
-            player.setVelocityX(1000);
+            player.setVelocityX(vitesseDash);
         }
 
         // dash à gauche
@@ -516,17 +558,17 @@ export class niveau_1 extends Phaser.Scene {
             cld_Dash=true;
             dash_gauche=true;
             capa_Dash.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activDash;
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(tempsDash, () => {
                 actif_Dash = false;
                 dash_gauche = false;
                 player.setGravityY(playerGravity);
             });
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownDash, () => {
                 cld_Dash = false;
                 capa_Dash.alpha = 1;
             });
@@ -536,7 +578,7 @@ export class niveau_1 extends Phaser.Scene {
         if(actif_Dash == true && dash_gauche == true){
             player.setGravityY(0);
             player.setVelocityY(0);
-            player.setVelocityX(-1000);
+            player.setVelocityX(-vitesseDash);
         }
 
         // double saut
@@ -544,15 +586,15 @@ export class niveau_1 extends Phaser.Scene {
             actif_Saut=true;
             cld_Saut=true;
             capa_Saut.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activSaut;
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(1, () => {
+            this.time.delayedCall(tempsSaut, () => {
                 actif_Saut = false;
             });
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownSaut, () => {
                 cld_Saut = false;
                 capa_Saut.alpha = 1;
             });
@@ -560,7 +602,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // activation de la capacité
         if (actif_Saut == true){
-            player.setVelocityY(-playerSaut);
+            player.setVelocityY(-hauteurSaut);
         }
 
 
@@ -569,7 +611,7 @@ export class niveau_1 extends Phaser.Scene {
         if (combat == true && cld_Coup == false && shift.isDown){
             cld_Coup = true;
             capa_Coup.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activCoup;
 
             groupe_ennemi_A.getChildren().forEach(function(enemy){
                 distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
@@ -583,7 +625,7 @@ export class niveau_1 extends Phaser.Scene {
 
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownCoup, () => {
                 cld_Coup = false;
                 capa_Coup.alpha = 1;
             });
@@ -595,18 +637,18 @@ export class niveau_1 extends Phaser.Scene {
             actif_Atterrisage=true;
             cld_Atterrisage=true;
             capa_Atterrissage.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activAtterrissage;
 
             playerDegat = true;
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(1500, () => {
+            this.time.delayedCall(tempsAtterrissage, () => {
                 actif_Atterrisage = false;
                 playerDegat = false;
             });  
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownAtterrissage, () => {
                 cld_Atterrisage = false;
                 capa_Atterrissage.alpha = 1;
             });  
@@ -616,7 +658,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // activation de la capacité
         if (actif_Atterrisage == true){
-            player.setVelocityY(3000);
+            player.setVelocityY(vitesseAtterrissage);
 
             groupe_ennemi_A.getChildren().forEach(function(enemy){
                 distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
@@ -641,18 +683,18 @@ export class niveau_1 extends Phaser.Scene {
             tir_droit = true;
             cld_Tir = true;
             capa_Tir.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activTir;
 
-            munition.create(player.x, player.y, "projectile").body.setVelocityX(900);
+            munition.create(player.x, player.y, "projectile").body.setVelocityX(vitesseTir);
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(10, () => {
+            this.time.delayedCall(tempsRecul, () => {
                 actif_Tir = false;
                 tir_droit=false;
             });
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
             });
@@ -660,7 +702,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // ativation d'un léger recul avec le tir
         if (actif_Tir==true && tir_droit== true){
-            player.setVelocityX(-1000)
+            player.setVelocityX(-vitesseRecul)
         }
 
         // tir à gauche
@@ -668,18 +710,18 @@ export class niveau_1 extends Phaser.Scene {
             cld_Tir = true;
             tir_gauche = true;
             capa_Tir.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activTir;
 
-            munition.create(player.x, player.y, "projectile").body.setVelocityX(-900);
+            munition.create(player.x, player.y, "projectile").body.setVelocityX(-vitesseTir);
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(10, () => {
+            this.time.delayedCall(tempsRecul, () => {
                 actif_Tir = false;
                 tir_gauche=false;
             });
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
             });
@@ -687,25 +729,25 @@ export class niveau_1 extends Phaser.Scene {
 
         // ativation d'un léger recul avec le tir
         if (actif_Tir==true && tir_gauche== true){
-            player.setVelocityX(1000)
+            player.setVelocityX(vitesseRecul)
         }
 
         // vol
         if (distance == true && cld_Vol == false && Phaser.Input.Keyboard.JustDown(space)){
             actif_Vol=true;
             cld_Vol = true;
-            playerVitesse = 200;
+            playerVitesse = vitesseVol;
             capa_Vol.alpha = 0.5;
-            this.jaugeValeur = this.jaugeValeur + 15;
+            this.jaugeValeur = this.jaugeValeur + activVol;
 
             // réglage de la durée de la capacité
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(tempsVol, () => {
                 actif_Vol = false;
-                playerVitesse = 700;
+                playerVitesse = majVitesse;
             });  
 
             // réglage du cooldown de la capacité
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(cooldownVol, () => {
                 cld_Vol = false;
                 capa_Vol.alpha = 1;
             });
@@ -713,7 +755,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // activation de la capacité
         if(actif_Vol==true){
-            player.setVelocityY(30);
+            player.setVelocityY(chuteVol);
         }
 
 
@@ -743,7 +785,7 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         if (rechargement == true) {
-            this.jaugeValeur = this.jaugeValeur - 20 / 60;
+            this.jaugeValeur = this.jaugeValeur - regeneration / 60;
             this.majJauge();
         }
 
@@ -978,7 +1020,7 @@ export class niveau_1 extends Phaser.Scene {
 
     collecteBatterie(player,batterie){
         batterie.disableBody(true, true);
-        this.jaugeValeur= this.jaugeValeur - 20
+        this.jaugeValeur= this.jaugeValeur - regenBatterie
     }
 
     degatEnnemi (balle,ennemi){
