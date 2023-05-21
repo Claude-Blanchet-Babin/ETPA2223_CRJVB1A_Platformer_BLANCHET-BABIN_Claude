@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="249" height="16" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="7">
  <tileset firstgid="1" name="tileset" tilewidth="128" tileheight="128" tilecount="25" columns="5">
-  <image source="../asset/carte/tileset.png" width="640" height="640"/>
+  <image source="../../../asset/carte/tileset.png" width="640" height="640"/>
   <tile id="1">
    <properties>
     <property name="solide" type="bool" value="true"/>
