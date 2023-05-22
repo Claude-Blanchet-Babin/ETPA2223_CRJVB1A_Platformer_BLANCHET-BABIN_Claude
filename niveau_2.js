@@ -36,6 +36,11 @@ var capa_Saut
 var capa_Tir
 var capa_Vol
 
+// bloc d'affichage des armures
+var interface_combat
+var interface_distance
+var interface_vitesse
+
 // voir si la compétence est active
 var actif_Atterrisage = false
 var actif_Coup = false
@@ -179,6 +184,9 @@ export class niveau_2 extends Phaser.Scene {
         this.load.image("saut", "asset/interface/saut.png");
         this.load.image("tir", "asset/interface/tir.png");
         this.load.image("vol", "asset/interface/vol.png");
+        this.load.image("combat","asset/interface/armure_combat.png")
+        this.load.image("distance","asset/interface/armure_distance.png")
+        this.load.image("vitesse","asset/interface/armure_vitesse.png")
 
         this.load.spritesheet("niveauVie", "asset/interface/brisure.png",
         {frameWidth : 1920, frameHeight: 1080});
@@ -409,6 +417,11 @@ export class niveau_2 extends Phaser.Scene {
         collisionVert = this.physics.add.collider(player, calque_mur_vert);
         collisionBleu = this.physics.add.collider(player, calque_mur_bleu);
 
+        // afficher les armures disponibles
+        interface_combat = this.add.image(650, 100,'combat').setVisible(false).setScrollFactor(0);
+        interface_vitesse = this.add.image(850, 100,'vitesse').setVisible(false).setScrollFactor(0);
+        interface_distance = this.add.image(1050, 100,'distance').setVisible(false).setScrollFactor(0);
+
         // création de la caméra
         // taille de la caméra
         this.cameras.main.setSize(1920, 1080);
@@ -519,6 +532,19 @@ export class niveau_2 extends Phaser.Scene {
         }
         if (playerLife == 0){
             lifeUI.anims.play('vie4', true);
+        }
+
+        // afficher une interface si une armure est obtenue
+        if(vitesseObtenu == true){
+            interface_vitesse.setVisible(true);
+        }
+
+        if(combatObtenu == true){
+            interface_combat.setVisible(true);
+        }
+
+        if(distanceObtenu == true){
+            interface_distance.setVisible(true);
         }
 
         // lancer le changement d'armure

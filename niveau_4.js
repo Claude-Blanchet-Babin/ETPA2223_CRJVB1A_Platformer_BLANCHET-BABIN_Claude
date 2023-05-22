@@ -36,6 +36,11 @@ var capa_Saut
 var capa_Tir
 var capa_Vol
 
+// bloc d'affichage des armures
+var interface_combat
+var interface_distance
+var interface_vitesse
+
 // voir si la compétence est active
 var actif_Atterrisage = false
 var actif_Coup = false
@@ -179,6 +184,9 @@ export class niveau_4 extends Phaser.Scene {
         this.load.image("saut", "asset/interface/saut.png");
         this.load.image("tir", "asset/interface/tir.png");
         this.load.image("vol", "asset/interface/vol.png");
+        this.load.image("combat","asset/interface/armure_combat.png")
+        this.load.image("distance","asset/interface/armure_distance.png")
+        this.load.image("vitesse","asset/interface/armure_vitesse.png")
 
         this.load.spritesheet("niveauVie", "asset/interface/brisure.png",
         {frameWidth : 1920, frameHeight: 1080});
@@ -278,6 +286,16 @@ export class niveau_4 extends Phaser.Scene {
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
+
+        // affichage des plateformes mobiles
+        position_plateforme=carteNiveau2.getObjectLayer("plateforme_spawn")
+        plateforme = this.physics.add.group();
+
+        position_plateforme.objects.forEach(plat => {
+            plateforme.create(plat.x,plat.y, "plateforme").body.setImmovable(true);
+        })
+
+        this.physics.add.collider(player,plateforme);
 
         // reprendre l'affichage des calques en mettant le decor
 
@@ -410,6 +428,11 @@ export class niveau_4 extends Phaser.Scene {
         capa_Tir = this.add.image(450, 100, 'tir').setVisible(false).setScrollFactor(0);
         capa_Vol = this.add.image(250, 100, 'vol').setVisible(false).setScrollFactor(0);
 
+        // afficher les armures disponibles
+        interface_combat = this.add.image(650, 100,'combat').setVisible(false).setScrollFactor(0);
+        interface_vitesse = this.add.image(850, 100,'vitesse').setVisible(false).setScrollFactor(0);
+        interface_distance = this.add.image(1050, 100,'distance').setVisible(false).setScrollFactor(0);
+
         // affichage de l'interface
         lifeUI = this.add.sprite(960,540, "niveauVie").setScrollFactor(0);
 
@@ -515,6 +538,19 @@ export class niveau_4 extends Phaser.Scene {
             this.formeBasique();
         }
 
+        // afficher une interface si une armure est obtenue
+        if(vitesseObtenu == true){
+            interface_vitesse.setVisible(true);
+        }
+
+        if(combatObtenu == true){
+            interface_combat.setVisible(true);
+        }
+
+        if(distanceObtenu == true){
+            interface_distance.setVisible(true);
+        }
+
         // vérifier quelle armure est activée pour traverser les murs
         // armure vitesse
         if (vitesse == true) {
@@ -542,7 +578,7 @@ export class niveau_4 extends Phaser.Scene {
 
         // vérifier la position du joueur pour terminer le niveau
         if (player.x >= 6336) {
-            this.sceneOverworld();
+            this.sceneCinematique();
         }
 
         // vérifier si une armure est activé pour faire perdre de l'énergie sur la jauge
@@ -974,6 +1010,10 @@ export class niveau_4 extends Phaser.Scene {
 
     sceneOverworld() {
         this.scene.start("overworld")
+    }
+
+    sceneCinematique() {
+        this.scene.start("cinematique")
     }
 
     sceneNiveau4() {

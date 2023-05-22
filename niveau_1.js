@@ -150,6 +150,7 @@ var position_plateforme
 // variables pour les écrans d'interface
 var ecranPause
 var ecranMort
+var ecranVictoire
 var boutonPartir
 var boutonRecommencer
 var boutonReprendre
@@ -198,6 +199,8 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("reprendre", "asset/ecran/reprendre.png");
 
         this.load.image("gameOver", "asset/ecran/game_over.png");
+
+        this.load.image("victoire", "asset/ecran/victoire.png");
 
         // chargement des collectables
         this.load.image("objCombat", "asset/objet/combat.png");
@@ -438,6 +441,9 @@ export class niveau_1 extends Phaser.Scene {
         boutonPartir.once('pointerup',this.sceneOverworld,this);
         boutonRecommencer.once('pointerup',this.sceneNiveau1,this);
         boutonReprendre.once('pointerup',this.Reprendre,this);
+
+        // affichage de l'écran de victoire
+        ecranVictoire = this.add.image(960, 540, 'victoire').setVisible(false).setScrollFactor(0);
 
 
         // création des nieaux de vie

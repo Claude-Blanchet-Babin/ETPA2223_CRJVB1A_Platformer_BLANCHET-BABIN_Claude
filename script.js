@@ -12,6 +12,8 @@ import {niveau_3 as niveau_3} from "./niveau_3.js"
 
 import {niveau_4 as niveau_4} from "./niveau_4.js"
 
+import {cinematique as cinematique} from "./cinematique.js"
+
 
 
 var config = {
@@ -26,7 +28,7 @@ var config = {
     }},
     pixelArt:true,
     input:{gamepad:true},
-    scene: [niveau_2,niveau_1,niveau_4,niveau_3,menu,overworld],
+    scene: [niveau_2,niveau_1,niveau_4,niveau_3,menu,overworld,cinematique],
         
 };
 
