@@ -18,12 +18,15 @@ var playerOpacity = false
 var gameOver = false
 var munition
 var playerLife = 4
-var playerVitesse = 700
-var majVitesse = 700
-var playerGravity = 1200
-var playerSaut = 1000
-var respawnX = 100
-var respawnY = 1500
+var playerVitesse = 300
+var majVitesse = 300
+var playerGravity = 1500
+var playerSaut = 900
+var respawnX = 150
+var spawnX = 150
+var respawnY = 1050
+var spawnY = 1050
+var chute = 1700
 
 // bloc d'affichage des capacités
 var capa_Atterrissage
@@ -67,7 +70,7 @@ var hauteurSaut = 1000
 var cooldownCoup = 3000
 
 var cooldownAtterrissage = 3000
-var tempsAtterrissage = 1500
+var tempsAtterrissage = 1000
 var vitesseAtterrissage = 3000
 
 var cooldownTir = 1000
@@ -109,6 +112,7 @@ var calque_plateforme
 var calque_mur_rouge
 var calque_mur_bleu
 var calque_mur_vert
+var calque_checkpoint
 
 // variables pour l'activation de la collision
 var collisionBleu
@@ -131,7 +135,12 @@ var distance = false
 
 // variables pour la batterie
 var batterie
+var position_batterie
 var rechargement = false
+
+// variables pour les plateformes mobiles
+var plateforme
+var position_plateforme
 
 // variables pour les écrans d'interface
 var ecranPause
@@ -213,6 +222,11 @@ export class niveau_1 extends Phaser.Scene {
         gameOver = false;
         playerDegat = false;
 
+        combat = false;
+        vitesse = false;
+        distance = false;
+        basique = true;
+
         // chargement de la carte 
         carteNiveau1 = this.add.tilemap("carteNiveau1");
 
@@ -255,8 +269,13 @@ export class niveau_1 extends Phaser.Scene {
             tileset
         );
 
+        calque_checkpoint = carteNiveau1.createLayer(
+            "checkpoint",
+            tileset
+        );
+
         // affichage du personnage
-        player = this.physics.add.sprite(100, 1500, "persoBase");
+        player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
 
         // reprendre l'affichage des calques en mettant le decor
@@ -277,6 +296,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // ajouter une collision entre les ennemis et le sol
         this.physics.add.collider(groupe_ennemi_A, calque_sol);
+        this.physics.add.collider(groupe_ennemi_A, calque_plateforme);
 
         console.log(groupe_ennemi_A.children.entries[0]);
 
@@ -295,20 +315,40 @@ export class niveau_1 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
 
         // afficher les collectables
-        objCombat = this.physics.add.image(400, 1500, "objCombat");
+        objCombat = this.physics.add.image(1650, 780, "objCombat");
+        objCombat.setGravityY(100);
+        
         objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
+        objVitesse.setGravityY(100);
+
         objDistance = this.physics.add.image(1600, 1500, "objDistance");
+        objDistance.setGravityY(100);
+
+        // afficher les batteries à partir d'un calque objet
+        position_batterie = carteNiveau1.getObjectLayer("batterie_spawn");
 
         batterie = this.physics.add.group();
+
+        position_batterie.objects.forEach(batery => {
+            batterie.create(batery.x,batery.y, "batterie").body.setGravityY(500);
+        })
+
 
         //collecte de batterie
         this.physics.add.overlap(player, batterie, this.collecteBatterie, null, this);
 
         // faire en sorte que les collectables collide avec le sol
         this.physics.add.collider(objCombat, calque_sol);
+        this.physics.add.collider(objCombat, calque_plateforme);
+
         this.physics.add.collider(objVitesse, calque_sol);
+        this.physics.add.collider(objVitesse, calque_plateforme);
+
         this.physics.add.collider(objDistance, calque_sol);
+        this.physics.add.collider(objDistance, calque_plateforme);
+
         this.physics.add.collider(batterie, calque_sol);
+        this.physics.add.collider(batterie, calque_plateforme);
 
         // faire en sorte que le joueur puisse ramasser les collectables
         this.physics.add.overlap(player, objCombat, this.collecteCombat, null, this);
@@ -351,15 +391,15 @@ export class niveau_1 extends Phaser.Scene {
         // faire en sorte que la caméra suive le personnage et qu'elle ne sorte pas de l'écran
         this.cameras.main.startFollow(player);
         this.cameras.main.setDeadzone(100, 100);
-        //this.cameras.main.setBounds(0,0,4160,3456);
+        this.cameras.main.setBounds(0,0,6400,1280);
 
         // intégrer une jauge
         this.graphics = this.add.graphics();
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
-        this.graphics.fillRect(20, 20, 100, 900).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
         this.jaugeValeur = -100; //pourcentage de la jauge
-        this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
+        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
 
         // afficher les cooldown de capacités
         capa_Atterrissage = this.add.image(250, 100, 'atterrissage').setVisible(false).setScrollFactor(0);
@@ -500,7 +540,7 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 15000) {
+        if (player.x >= 6336) {
             this.sceneOverworld();
         }
 
@@ -791,14 +831,14 @@ export class niveau_1 extends Phaser.Scene {
 
         // mettre en place le système de checkpoint
         // faire réaparaitre le joueur lorsqu'il tombe dans le vide
-        if (player.y > 1900){
+        if (player.y > chute){
             player.x = respawnX
             player.y = respawnY
         }
 
         // premier checkpoint
-        if (player.x > 7000){
-            respawnX = 7000
+        if (player.x > 3456){
+            respawnX = 3456
         }
 
         // mise en place de la pause
@@ -827,9 +867,9 @@ export class niveau_1 extends Phaser.Scene {
     majJauge() {
         this.graphics.clear();
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
-        this.graphics.fillRect(20, 20, 100, 900).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
-        this.jauge = this.graphics.fillRect(20, 20 + 900, 100, 900 * (this.jaugeValeur / 100)).setScrollFactor(0);
+        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
     }
 
     collecteVitesse() {

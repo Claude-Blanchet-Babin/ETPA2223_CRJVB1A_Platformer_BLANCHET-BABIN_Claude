@@ -106,7 +106,7 @@ var distanceY
 
 // variables de la carte niveau 2
 var tileset
-var carteNiveau2
+var carteNiveau4
 var calque_sol
 var calque_plateforme
 var calque_mur_rouge
@@ -149,9 +149,9 @@ var boutonPartir
 var boutonRecommencer
 var boutonReprendre
 
-export class niveau_2 extends Phaser.Scene {
+export class niveau_4 extends Phaser.Scene {
     constructor() {
-        super("niveau_2");
+        super("niveau_4");
     }
 
     init(data){
@@ -162,15 +162,15 @@ export class niveau_2 extends Phaser.Scene {
     preload() {
 
         // chargement du background
-        this.load.image("fond0", "asset/niveau2/background_0.png");
-        this.load.image("fond1", "asset/niveau2/background_1.png");
-        this.load.image("fond2", "asset/niveau2/background_2.png");
-        this.load.image("fond3", "asset/niveau2/background_3.png");
-        this.load.image("fond4", "asset/niveau2/background_4.png");
+        this.load.image("fond0", "asset/niveau4/background_0.png");
+        this.load.image("fond1", "asset/niveau4/background_1.png");
+        this.load.image("fond2", "asset/niveau4/background_2.png");
+        this.load.image("fond3", "asset/niveau4/background_3.png");
+        this.load.image("fond4", "asset/niveau4/background_4.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu", "asset/carte/tileset.png");
-        this.load.tilemapTiledJSON("carteNiveau2", "asset/carte/niveau_2.json");
+        this.load.tilemapTiledJSON("carteNiveau4", "asset/carte/niveau_4.json");
 
         // chargement de l'interface utilisateur
         this.load.image("atterrissage", "asset/interface/atterrissage.png");
@@ -227,11 +227,12 @@ export class niveau_2 extends Phaser.Scene {
         distance = false;
         basique = true;
 
+
         // chargement de la carte 
-        carteNiveau2 = this.add.tilemap("carteNiveau2");
+        carteNiveau4 = this.add.tilemap("carteNiveau4");
 
         // chargement du jeu de tuile
-        tileset = carteNiveau2.addTilesetImage(
+        tileset = carteNiveau4.addTilesetImage(
             "tileset",
             "Phaser_tuilesdejeu"
         );
@@ -244,32 +245,32 @@ export class niveau_2 extends Phaser.Scene {
         this.add.image(0, 0, "fond4").setOrigin(0, 0);
 
         // affichage des calques
-        calque_sol = carteNiveau2.createLayer(
+        calque_sol = carteNiveau4.createLayer(
             "sol",
             tileset
         );
 
-        calque_plateforme = carteNiveau2.createLayer(
+        calque_plateforme = carteNiveau4.createLayer(
             "plateforme",
             tileset
         );
 
-        calque_mur_rouge = carteNiveau2.createLayer(
+        calque_mur_rouge = carteNiveau4.createLayer(
             "mur_rouge",
             tileset
         );
 
-        calque_mur_vert = carteNiveau2.createLayer(
+        calque_mur_vert = carteNiveau4.createLayer(
             "mur_vert",
             tileset
         );
 
-        calque_mur_bleu = carteNiveau2.createLayer(
+        calque_mur_bleu = carteNiveau4.createLayer(
             "mur_bleu",
             tileset
         );
 
-        calque_checkpoint = carteNiveau2.createLayer(
+        calque_checkpoint = carteNiveau4.createLayer(
             "checkpoint",
             tileset
         );
@@ -278,38 +279,13 @@ export class niveau_2 extends Phaser.Scene {
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
 
-        // affichage des plateformes mobiles
-        position_plateforme=carteNiveau2.getObjectLayer("plateforme_spawn")
-        plateforme = this.physics.add.group();
-
-        position_plateforme.objects.forEach(plat => {
-            plateforme.create(plat.x,plat.y, "plateforme").body.setImmovable(true);
-        })
-
-        this.physics.add.collider(player,plateforme);
-
-        this.tweens.add({
-            targets : plateforme.children.entries[2],
-            y: 100,
-            duration: 6000,
-            repeat : -1,
-            yoyo : true
-        });
-
-        this.tweens.add({
-            targets : plateforme.children.entries[1],
-            y: 100,
-            duration: 6000,
-            repeat : -1,
-            yoyo : true
-        });
         // reprendre l'affichage des calques en mettant le decor
 
         // afficher les animations du personnage lorsqu'il se déplace
 
         // affichage des ennemis
         // créer un groupe d'ennemi à partir d'un calque
-        position_ennemi_A = carteNiveau2.getObjectLayer("ennemi_A_spawn");
+        position_ennemi_A = carteNiveau4.getObjectLayer("ennemi_A_spawn");
 
         // créer un groupe d'ennemi
         groupe_ennemi_A = this.physics.add.group();
@@ -340,23 +316,24 @@ export class niveau_2 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
 
         // afficher les collectables
-        objCombat = this.physics.add.image(1650, 1500, "objCombat");
+        objCombat = this.physics.add.image(1175, 650, "objCombat");
         objCombat.setGravityY(100);
         
-        objVitesse = this.physics.add.image(1150, 750, "objVitesse");
+        objVitesse = this.physics.add.image(750, 950, "objVitesse");
         objVitesse.setGravityY(100);
 
-        objDistance = this.physics.add.image(1600, 1500, "objDistance");
+        objDistance = this.physics.add.image(500, 1150, "objDistance");
         objDistance.setGravityY(100);
 
         // afficher les batteries à partir d'un calque objet
-        position_batterie = carteNiveau2.getObjectLayer("batterie_spawn");
+        position_batterie = carteNiveau4.getObjectLayer("batterie_spawn");
 
         batterie = this.physics.add.group();
 
         position_batterie.objects.forEach(batery => {
             batterie.create(batery.x,batery.y, "batterie").body.setGravityY(500);
         })
+
 
         //collecte de batterie
         this.physics.add.overlap(player, batterie, this.collecteBatterie, null, this);
@@ -447,7 +424,7 @@ export class niveau_2 extends Phaser.Scene {
         boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
 
         boutonPartir.once('pointerup',this.sceneOverworld,this);
-        boutonRecommencer.once('pointerup',this.sceneNiveau2,this);
+        boutonRecommencer.once('pointerup',this.sceneNiveau4,this);
         boutonReprendre.once('pointerup',this.Reprendre,this);
 
 
@@ -861,8 +838,8 @@ export class niveau_2 extends Phaser.Scene {
         }
 
         // premier checkpoint
-        if (player.x > 2624){
-            respawnX = 2624
+        if (player.x > 1408){
+            respawnX = 1408
         }
 
         // mise en place de la pause
@@ -999,8 +976,8 @@ export class niveau_2 extends Phaser.Scene {
         this.scene.start("overworld")
     }
 
-    sceneNiveau2() {
-        this.scene.start("niveau_2",{
+    sceneNiveau4() {
+        this.scene.start("niveau_4",{
             transfertVie : 4,
             entrance : "restart",
         })
@@ -1089,8 +1066,8 @@ export class niveau_2 extends Phaser.Scene {
 
     degatEnnemi (balle,ennemi){
         balle.disableBody(true,true);
-        //ennemi.disableBody(true,true);
-        ennemi.destroy();
+        ennemi.disableBody(true,true);
+
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
     }
 

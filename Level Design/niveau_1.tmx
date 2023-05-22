@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="15" nextobjectid="31">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="15" nextobjectid="38">
+ <editorsettings>
+  <export target="../asset/carte/niveau_1.json" format="json"/>
+ </editorsettings>
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="100" columns="10">
   <image source="tileset.png" width="640" height="640"/>
   <tile id="0">
@@ -189,18 +192,18 @@
 </data>
  </layer>
  <objectgroup id="6" name="ennemi_A_spawn">
-  <object id="3" gid="93" x="1216" y="1152" width="64" height="64"/>
-  <object id="4" gid="93" x="2178" y="1152" width="64" height="64"/>
   <object id="5" gid="93" x="2404" y="886" width="64" height="64"/>
   <object id="6" gid="93" x="3006" y="658" width="64" height="64"/>
-  <object id="7" gid="93" x="3554" y="1148" width="64" height="64"/>
   <object id="8" gid="93" x="3734" y="850" width="64" height="64"/>
   <object id="10" gid="93" x="4248" y="536" width="64" height="64"/>
   <object id="11" gid="93" x="4338" y="812" width="64" height="64"/>
-  <object id="17" gid="93" x="5396" y="1142" width="64" height="64"/>
-  <object id="21" gid="93" x="5486" y="1140" width="64" height="64"/>
-  <object id="22" gid="93" x="5740" y="1140" width="64" height="64"/>
-  <object id="23" gid="93" x="5658" y="1138" width="64" height="64"/>
+  <object id="31" gid="93" x="1240" y="1116" width="64" height="64"/>
+  <object id="32" gid="93" x="2136" y="1112" width="64" height="64"/>
+  <object id="33" gid="93" x="3564" y="1128" width="64" height="64"/>
+  <object id="34" gid="93" x="5404" y="1120" width="64" height="64"/>
+  <object id="35" gid="93" x="5500" y="1124" width="64" height="64"/>
+  <object id="36" gid="93" x="5656" y="1120" width="64" height="64"/>
+  <object id="37" gid="93" x="5748" y="1116" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="ennemi_B_spawn">
   <object id="14" gid="94" x="5026" y="756" width="64" height="64"/>

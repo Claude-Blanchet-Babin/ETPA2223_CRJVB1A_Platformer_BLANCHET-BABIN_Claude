@@ -8,6 +8,10 @@ import {niveau_1 as niveau_1} from "./niveau_1.js"
 
 import {niveau_2 as niveau_2} from "./niveau_2.js"
 
+import {niveau_3 as niveau_3} from "./niveau_3.js"
+
+import {niveau_4 as niveau_4} from "./niveau_4.js"
+
 
 
 var config = {
@@ -18,11 +22,11 @@ var config = {
         arcade: {
         //gravity: { y: 0 },
         debug: true,
-        tileBias : 128
+        tileBias : 64
     }},
     pixelArt:true,
     input:{gamepad:true},
-    scene: [niveau_1,menu,overworld,niveau_2],
+    scene: [niveau_2,niveau_1,niveau_4,niveau_3,menu,overworld],
         
 };
 
