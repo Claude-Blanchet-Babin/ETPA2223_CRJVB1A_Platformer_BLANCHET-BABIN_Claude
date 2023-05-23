@@ -288,14 +288,47 @@ export class niveau_4 extends Phaser.Scene {
         player.setGravityY(playerGravity);
 
         // affichage des plateformes mobiles
-        position_plateforme=carteNiveau2.getObjectLayer("plateforme_spawn")
+        position_plateforme=carteNiveau4.getObjectLayer("plateforme_spawn")
         plateforme = this.physics.add.group();
 
         position_plateforme.objects.forEach(plat => {
             plateforme.create(plat.x,plat.y, "plateforme").body.setImmovable(true);
         })
 
-        this.physics.add.collider(player,plateforme);
+        this.physics.add.collider(player,plateforme,this.suivrePlateforme,null,this);
+
+        // définir les mouvements des plateformes
+        this.tweens.add({
+            targets : plateforme.children.entries[0],
+            x: 2304,
+            duration: 2000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[1],
+            x: 2432,
+            duration: 2000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[2],
+            y: 512,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[3],
+            y: 256,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
 
         // reprendre l'affichage des calques en mettant le decor
 
@@ -1117,5 +1150,8 @@ export class niveau_4 extends Phaser.Scene {
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
     }
 
+    suivrePlateforme(player,plateforme){
+        player.setVelocityX(plateforme.body.velocity.x);
+    }
 
 };

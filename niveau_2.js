@@ -296,9 +296,10 @@ export class niveau_2 extends Phaser.Scene {
 
         this.physics.add.collider(player,plateforme);
 
+        // définir les mouvements des plateformes
         this.tweens.add({
-            targets : plateforme.children.entries[2],
-            y: 100,
+            targets : plateforme.children.entries[0],
+            y: 300,
             duration: 6000,
             repeat : -1,
             yoyo : true
@@ -306,11 +307,20 @@ export class niveau_2 extends Phaser.Scene {
 
         this.tweens.add({
             targets : plateforme.children.entries[1],
-            y: 100,
+            y: 1000,
             duration: 6000,
             repeat : -1,
             yoyo : true
         });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[2],
+            y: 300,
+            duration: 6000,
+            repeat : -1,
+            yoyo : true
+        });
+        
         // reprendre l'affichage des calques en mettant le decor
 
         // afficher les animations du personnage lorsqu'il se déplace

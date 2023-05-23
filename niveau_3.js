@@ -287,7 +287,7 @@ export class niveau_3 extends Phaser.Scene {
         player.setGravityY(playerGravity);
 
         // affichage des plateformes mobiles
-        position_plateforme=carteNiveau2.getObjectLayer("plateforme_spawn")
+        position_plateforme=carteNiveau3.getObjectLayer("plateforme_spawn")
         plateforme = this.physics.add.group();
 
         position_plateforme.objects.forEach(plat => {
@@ -295,6 +295,31 @@ export class niveau_3 extends Phaser.Scene {
         })
 
         this.physics.add.collider(player,plateforme);
+
+        // définir les mouvements des plateformes
+        this.tweens.add({
+            targets : plateforme.children.entries[0],
+            y: 300,
+            duration: 6000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[1],
+            y: 1000,
+            duration: 6000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : plateforme.children.entries[2],
+            y: 300,
+            duration: 6000,
+            repeat : -1,
+            yoyo : true
+        });
 
         // reprendre l'affichage des calques en mettant le decor
 

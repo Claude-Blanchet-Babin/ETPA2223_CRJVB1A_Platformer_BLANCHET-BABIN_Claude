@@ -18,6 +18,8 @@ var playerGravity = 1500
 var playerSaut = 900
 var respawnX = 100
 var respawnY = 1100
+var spawnX = 100
+var spawnY = 850
 
 // variables de la carte overworld
 var carteOverworld
@@ -42,11 +44,16 @@ export class overworld extends Phaser.Scene{
         this.load.image("Phaser_tuilesdejeu","asset/carte/tileset.png");
         this.load.tilemapTiledJSON("carteOverworld","asset/carte/overworld.json");
 
-        // chargement de l'interface utilisateur
+        // chargement des pré visuels de niveau
+        this.load.image("1ferme","asset/overworld/1_ferme.png");
+        this.load.image("1ouvert","asset/overworld/1_ouvert.png");
+        this.load.image("2ferme","asset/overworld/2_ferme.png");
+        this.load.image("2ouvert","asset/overworld/2_ouvert.png");
+        this.load.image("3ferme","asset/overworld/3_ferme.png");
+        this.load.image("3ouvert","asset/overworld/3_ouvert.png");
+        this.load.image("4ferme","asset/overworld/4_ferme.png");
+        this.load.image("4ouvert","asset/overworld/4_ouvert.png");
 
-        // chargement des collectables
-
-        // chargement des plateformes qui bougent
 
         // chargement du personnage
         this.load.image("persoBase","asset/personnage/basique.png");
@@ -54,7 +61,6 @@ export class overworld extends Phaser.Scene{
         this.load.image("persoDistance","asset/personnage/distance.png");
         this.load.image("persoVitesse","asset/personnage/vitesse.png");
 
-        // chargement des ennemis
     }
 
     // création du niveau
@@ -99,16 +105,13 @@ export class overworld extends Phaser.Scene{
         );
 
         // affichage du personnage
-        player = this.physics.add.sprite(100, 500, "persoBase");
+        player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(1200);
 
-        // reprendre l'affichage du des calques en mettant le decor
+        // affichage des prévisuels
 
         // afficher les animations du personnage lorsqu'il se déplace
-
-        // affichage des ennemis
-
-        // créer les animations des ennemis
+        
 
         // création de la détéction du clavier
         cursors = this.input.keyboard.createCursorKeys();
