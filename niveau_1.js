@@ -154,6 +154,7 @@ var ecranVictoire
 var boutonPartir
 var boutonRecommencer
 var boutonReprendre
+var boutonQuitter
 
 export class niveau_1 extends Phaser.Scene {
     constructor() {
@@ -162,6 +163,7 @@ export class niveau_1 extends Phaser.Scene {
 
     init(data){
         playerLife = data.transfertVie
+        this.entrance = data.entrance
     }
 
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
@@ -197,6 +199,7 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("partir", "asset/ecran/partir.png");
         this.load.image("recommencer", "asset/ecran/recommencer.png");
         this.load.image("reprendre", "asset/ecran/reprendre.png");
+        this.load.image("quitter", "asset/ecran/quitter.png");
 
         this.load.image("gameOver", "asset/ecran/game_over.png");
 
@@ -238,6 +241,10 @@ export class niveau_1 extends Phaser.Scene {
         distance = false;
         basique = true;
 
+        combatObtenu = false
+        distanceObtenu = false
+        vitesseObtenu = false
+
         // chargement de la carte 
         carteNiveau1 = this.add.tilemap("carteNiveau1");
 
@@ -248,11 +255,25 @@ export class niveau_1 extends Phaser.Scene {
         );
 
         // affichage du background
-        this.add.image(0, 0, "fond0").setOrigin(0, 0);
-        this.add.image(0, 0, "fond1").setOrigin(0, 0);
-        this.add.image(0, 0, "fond2").setOrigin(0, 0);
-        this.add.image(0, 0, "fond3").setOrigin(0, 0);
-        this.add.image(0, 0, "fond4").setOrigin(0, 0);
+        this.backgroundPrallax = this.add.tileSprite(0,0,1600,1600,"fond0");
+        this.backgroundPrallax.setOrigin(0,0);
+        this.backgroundPrallax.setScrollFactor(1,1);
+    
+        this.quatriemePlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond1");
+        this.quatriemePlanPrallax.setOrigin(0,0);
+        this.quatriemePlanPrallax.setScrollFactor(0.85,1);
+    
+        this.troisiemePlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond2");
+        this.troisiemePlanPrallax.setOrigin(0,0);
+        this.troisiemePlanPrallax.setScrollFactor(0.8,1);
+    
+        this.secondPlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond3");
+        this.secondPlanPrallax.setOrigin(0,0);
+        this.secondPlanPrallax.setScrollFactor(0.65,1);
+    
+        this.premierPlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond4");
+        this.premierPlanPrallax.setOrigin(0,0);
+        this.premierPlanPrallax.setScrollFactor(1,1);
 
         // affichage des calques
         calque_sol = carteNiveau1.createLayer(
@@ -284,6 +305,12 @@ export class niveau_1 extends Phaser.Scene {
             "checkpoint",
             tileset
         );
+
+        // changer le spawn pour le retour
+        if (this.entrance == "retour"){
+            spawnX = 6272
+            spawnY = 1088
+        }
 
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
@@ -334,6 +361,17 @@ export class niveau_1 extends Phaser.Scene {
 
         objDistance = this.physics.add.image(1600, 1500, "objDistance");
         objDistance.setGravityY(100);
+
+        // retirer les objets armures et activer toutes les armures
+        if (this.entrance == "retour"){
+            objCombat.setVisible(false);
+            objVitesse.setVisible(false);
+            objDistance.setVisible(false);
+
+            combatObtenu = true;
+            vitesseObtenu = true;
+            distanceObtenu = true;
+        }
 
         // afficher les batteries à partir d'un calque objet
         position_batterie = carteNiveau1.getObjectLayer("batterie_spawn");
@@ -437,13 +475,15 @@ export class niveau_1 extends Phaser.Scene {
         boutonPartir = this.add.image(300, 950, 'partir').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
+        boutonQuitter = this.add.image(960, 950, 'quitter').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
 
-        boutonPartir.once('pointerup',this.sceneOverworld,this);
+        boutonPartir.once('pointerup',this.sceneOverworldQuit,this);
         boutonRecommencer.once('pointerup',this.sceneNiveau1,this);
         boutonReprendre.once('pointerup',this.Reprendre,this);
 
-        // affichage de l'écran de victoire
+        // affichage de l'écran de victoire et de son bouton quitter
         ecranVictoire = this.add.image(960, 540, 'victoire').setVisible(false).setScrollFactor(0);
+        boutonQuitter.once('pointerup',this.Quitter,this);
 
 
         // création des nieaux de vie
@@ -572,8 +612,12 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336) {
-            this.sceneOverworld();
+        if (player.x >= 6336 && this.entrance == "overworld") {
+            this.sceneOverworldWin();
+        }
+
+        if (player.x <= 0 && this.entrance == "retour") {
+            this.victoire();
         }
 
         // vérifier si une armure est activé pour faire perdre de l'énergie sur la jauge
@@ -869,7 +913,11 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // premier checkpoint
-        if (player.x > 3456){
+        if (player.x > 3456 && this.entrance=="overworld"){
+            respawnX = 3456
+        }
+
+        if (player.x < 3456 && this.entrance=="retour"){
             respawnX = 3456
         }
 
@@ -1003,8 +1051,16 @@ export class niveau_1 extends Phaser.Scene {
         capa_Vol.setVisible(false);
     }
 
-    sceneOverworld() {
-        this.scene.start("overworld")
+    sceneOverworldQuit() {
+        this.scene.start("overworld",{
+            entrance : "loose1"
+        })
+    }
+
+    sceneOverworldWin() {
+        this.scene.start("overworld",{
+            entrance : "win1",
+        })
     }
 
     sceneNiveau1() {
@@ -1014,11 +1070,20 @@ export class niveau_1 extends Phaser.Scene {
         })
     }
 
+    victoire(){
+        ecranVictoire.setVisible(true);
+        boutonQuitter.setVisible(true);
+    }
+
     Reprendre() {
         boutonPartir.setVisible(false);
         boutonRecommencer.setVisible(false);
         boutonReprendre.setVisible(false);
         ecranPause.setVisible(false);
+    }
+
+    Quitter() {
+        this.scene.start("menu");
     }
 
     degat(){

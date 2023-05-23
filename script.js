@@ -28,7 +28,7 @@ var config = {
     }},
     pixelArt:true,
     input:{gamepad:true},
-    scene: [overworld,niveau_4,cinematique,niveau_3,niveau_2,niveau_1,menu],
+    scene: [menu,cinematique,overworld,niveau_4,niveau_3,niveau_2,niveau_1],
         
 };
 

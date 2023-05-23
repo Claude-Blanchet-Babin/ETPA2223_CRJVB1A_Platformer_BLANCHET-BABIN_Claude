@@ -161,6 +161,7 @@ export class niveau_4 extends Phaser.Scene {
 
     init(data){
         playerLife = data.transfertVie
+        this.entrance = data.entrance
     }
 
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
@@ -235,6 +236,9 @@ export class niveau_4 extends Phaser.Scene {
         distance = false;
         basique = true;
 
+        combatObtenu = false
+        distanceObtenu = false
+        vitesseObtenu = false
 
         // chargement de la carte 
         carteNiveau4 = this.add.tilemap("carteNiveau4");
@@ -282,6 +286,12 @@ export class niveau_4 extends Phaser.Scene {
             "checkpoint",
             tileset
         );
+
+        // changer le spawn pour le retour
+        if (this.entrance == "retour"){
+            spawnX = 6080
+            spawnY = 576
+        }
 
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
@@ -375,6 +385,17 @@ export class niveau_4 extends Phaser.Scene {
 
         objDistance = this.physics.add.image(500, 1150, "objDistance");
         objDistance.setGravityY(100);
+
+        // retirer les objets armures et activer toutes les armures
+        if (this.entrance == "retour"){
+            objCombat.setVisible(false);
+            objVitesse.setVisible(false);
+            objDistance.setVisible(false);
+
+            combatObtenu = true;
+            vitesseObtenu = true;
+            distanceObtenu = true;
+        }
 
         // afficher les batteries à partir d'un calque objet
         position_batterie = carteNiveau4.getObjectLayer("batterie_spawn");
@@ -479,7 +500,7 @@ export class niveau_4 extends Phaser.Scene {
         boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
 
-        boutonPartir.once('pointerup',this.sceneOverworld,this);
+        boutonPartir.once('pointerup',this.sceneOverworldQuit,this);
         boutonRecommencer.once('pointerup',this.sceneNiveau4,this);
         boutonReprendre.once('pointerup',this.Reprendre,this);
 
@@ -610,8 +631,12 @@ export class niveau_4 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336) {
+        if (player.x >= 6336 && this.entrance == "overworld") {
             this.sceneCinematique();
+        }
+
+        if (player.x <= 0 && this.entrance == "retour") {
+            this.sceneNiveau3();
         }
 
         // vérifier si une armure est activé pour faire perdre de l'énergie sur la jauge
@@ -907,7 +932,11 @@ export class niveau_4 extends Phaser.Scene {
         }
 
         // premier checkpoint
-        if (player.x > 1408){
+        if (player.x > 1408 && this.entrance=="overworld"){
+            respawnX = 1408
+        }
+
+        if (player.x < 1408 && this.entrance=="retour"){
             respawnX = 1408
         }
 
@@ -1041,8 +1070,16 @@ export class niveau_4 extends Phaser.Scene {
         capa_Vol.setVisible(false);
     }
 
-    sceneOverworld() {
-        this.scene.start("overworld")
+    sceneOverworldQuit() {
+        this.scene.start("overworld",{
+            entrance : "loose4"
+        })
+    }
+
+    sceneOverworldWin() {
+        this.scene.start("overworld",{
+            entrance : "win4",
+        })
     }
 
     sceneCinematique() {
@@ -1053,6 +1090,13 @@ export class niveau_4 extends Phaser.Scene {
         this.scene.start("niveau_4",{
             transfertVie : 4,
             entrance : "restart",
+        })
+    }
+
+    sceneNiveau3() {
+        this.scene.start("niveau_3",{
+            transfertVie : 4,
+            entrance : "retour",
         })
     }
 

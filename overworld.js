@@ -16,8 +16,6 @@ var playerVitesse = 500
 var majVitesse = 300
 var playerGravity = 1500
 var playerSaut = 900
-var respawnX = 100
-var respawnY = 1100
 var spawnX = 100
 var spawnY = 850
 
@@ -29,9 +27,29 @@ var calque_niveau_2
 var calque_niveau_3
 var calque_niveau_4
 
+// variables des pré vsisuels
+var ferme_1
+var ouvert_1
+var ferme_2
+var ouvert_2
+var ferme_3
+var ouvert_3
+var ferme_4
+var ouvert_4
+
+// variables des niveaux disponibles
+var lvl1Dispo = true
+var lvl2Dispo = false
+var lvl3Dispo = false
+var lvl4Dispo = false
+
 export class overworld extends Phaser.Scene{
     constructor(){
         super("overworld");
+    }
+
+    init(data){
+        this.entrance = data.entrance
     }
 
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
@@ -104,14 +122,79 @@ export class overworld extends Phaser.Scene{
             tileset
         );
 
+        // affichage des prévisuels
+        ouvert_1 = this.add.image(750,450,"1ouvert")
+        
+        ouvert_2 = this.add.image(1400,450,"2ouvert")
+        ferme_2 = this.add.image(1400,450,"2ferme")
+
+        ouvert_3 = this.add.image(2050,450,"3ouvert")
+        ferme_3 = this.add.image(2050,450,"3ferme")
+
+        ouvert_4 = this.add.image(2700,450,"4ouvert")
+        ferme_4 = this.add.image(2700,450,"4ferme")
+
+        // vérifier si le joueur vient de finir le niveau ou pas
+        if (this.entrance == 'win1'){
+            ferme_2.setVisible(false);
+            lvl2Dispo = true;
+            spawnX = 768;
+        }
+
+        if (this.entrance == 'win2'){
+            ferme_2.setVisible(false);
+            ferme_3.setVisible(false);
+            lvl3Dispo = true;
+            spawnX = 1408
+        }
+
+        if (this.entrance == 'win3'){
+            ferme_2.setVisible(false);
+            ferme_3.setVisible(false);
+            ferme_4.setVisible(false);
+            lvl4Dispo = true;
+            spawnX = 2048
+        }
+
+        if (this.entrance == 'loose1'){
+            spawnX = 768;
+        }
+
+        if (this.entrance == 'loose2'){
+            ferme_2.setVisible(false);
+            spawnX = 1408;
+        }
+
+        if (this.entrance == 'loose3'){
+            ferme_2.setVisible(false);
+            ferme_3.setVisible(false);
+            spawnX = 2048;
+        }
+
+        if (this.entrance == 'loose4'){
+            ferme_2.setVisible(false);
+            ferme_3.setVisible(false);
+            ferme_4.setVisible(false);
+            spawnX = 2688;
+        }
+
+        if(lvl2Dispo == true){
+            ferme_2.setVisible(false);
+        }
+
+        if(lvl3Dispo == true){
+            ferme_3.setVisible(false);
+        }
+
+        if(lvl4Dispo == true){
+            ferme_4.setVisible(false);
+        }
+
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(1200);
 
-        // affichage des prévisuels
-
         // afficher les animations du personnage lorsqu'il se déplace
-        
 
         // création de la détéction du clavier
         cursors = this.input.keyboard.createCursorKeys();
@@ -144,6 +227,7 @@ export class overworld extends Phaser.Scene{
         this.cameras.main.startFollow(player);
         this.cameras.main.setDeadzone(100,100);
         this.cameras.main.setBounds(0,0,3520,640);
+
     }
     
 
@@ -164,43 +248,51 @@ export class overworld extends Phaser.Scene{
     }
 
     niveau1(){
-        if (enter.isDown){
+        if (enter.isDown && lvl1Dispo == true){
             this.sceneNiveau_1();
         }
     }
 
     niveau2(){
-        if (enter.isDown){
+        if (enter.isDown && lvl2Dispo == true){
             this.sceneNiveau_2();
         }
     }
 
     niveau3(){
-        if (enter.isDown){
+        if (enter.isDown && lvl3Dispo == true){
             this.sceneNiveau_3();
         }
     }
 
     niveau4(){
-        if (enter.isDown){
+        if (enter.isDown && lvl4Dispo == true){
             this.sceneNiveau_4();
         }
     }
 
     sceneNiveau_1(){
-        this.scene.start("niveau_1")
+        this.scene.start("niveau_1",{
+            entrance: "overworld",
+        })
     }
 
     sceneNiveau_2(){
-        this.scene.start("niveau_2")
+        this.scene.start("niveau_2",{
+            entrance: "overworld",
+        })
     }
 
     sceneNiveau_3(){
-        this.scene.start("niveau_3")
+        this.scene.start("niveau_3",{
+            entrance: "overworld",
+        })
     }
 
     sceneNiveau_4(){
-        this.scene.start("niveau_4")
+        this.scene.start("niveau_4",{
+            entrance: "overworld",
+        })
     }
 
 };
