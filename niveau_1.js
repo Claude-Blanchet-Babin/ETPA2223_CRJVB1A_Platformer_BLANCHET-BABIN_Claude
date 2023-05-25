@@ -104,6 +104,12 @@ var regenBatterie = 20
 // variables pour les ennemis
 var position_ennemi_A
 var groupe_ennemi_A
+var position_ennemi_B
+var groupe_ennemi_B
+var position_ennemi_C
+var groupe_ennemi_C
+var position_ennemi_D
+var groupe_ennemi_D
 
 var distance
 var distanceX
@@ -155,6 +161,10 @@ var boutonPartir
 var boutonRecommencer
 var boutonReprendre
 var boutonQuitter
+
+// variables pour définir l'aller ou le retour
+var aller = true
+var retour = false
 
 export class niveau_1 extends Phaser.Scene {
     constructor() {
@@ -224,6 +234,7 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("red", "asset/ennemi/rouge.png");
         this.load.image("blue", "asset/ennemi/bleu.png");
         this.load.image("green", "asset/ennemi/vert.png");
+        this.load.image("purple", "asset/ennemi/violet.png");
 
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
@@ -231,6 +242,24 @@ export class niveau_1 extends Phaser.Scene {
 
     // création du niveau
     create() {
+
+        aller = true;
+        retour = false;
+
+        // vérifier s'il s'agit de l'aller ou du retour
+        if(this.entrance=="overworld"){
+            aller = true;
+            retour = false;
+        }
+
+        if(this.entrance=="retour"){
+            aller=false;
+            retour=true;
+        }
+
+        console.log(this.entrance)
+        console.log(aller)
+        console.log(retour)
 
         playerLife = 4;
         gameOver = false;
@@ -255,23 +284,23 @@ export class niveau_1 extends Phaser.Scene {
         );
 
         // affichage du background
-        this.backgroundPrallax = this.add.tileSprite(0,0,1600,1600,"fond0");
-        this.backgroundPrallax.setOrigin(0,0);
-        this.backgroundPrallax.setScrollFactor(1,1);
+        this.backgroundParallax = this.add.tileSprite(0,0,6400,1280,"fond0");
+        this.backgroundParallax.setOrigin(0,0);
+        this.backgroundParallax.setScrollFactor(1,1);
     
-        this.quatriemePlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond1");
-        this.quatriemePlanPrallax.setOrigin(0,0);
-        this.quatriemePlanPrallax.setScrollFactor(0.85,1);
+        this.quatriemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond1");
+        this.quatriemePlanParallax.setOrigin(0,0);
+        this.quatriemePlanParallax.setScrollFactor(0.85,1);
     
-        this.troisiemePlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond2");
-        this.troisiemePlanPrallax.setOrigin(0,0);
-        this.troisiemePlanPrallax.setScrollFactor(0.8,1);
+        this.troisiemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond2");
+        this.troisiemePlanParallax.setOrigin(0,0);
+        this.troisiemePlanParallax.setScrollFactor(0.8,1);
     
-        this.secondPlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond3");
-        this.secondPlanPrallax.setOrigin(0,0);
-        this.secondPlanPrallax.setScrollFactor(0.65,1);
+        this.secondPlanParallax = this.add.tileSprite(0,0,6400,1280,"fond3");
+        this.secondPlanParallax.setOrigin(0,0);
+        this.secondPlanParallax.setScrollFactor(0.65,1);
     
-        this.premierPlanPrallax = this.add.tileSprite(0,0,1600,1600,"fond4");
+        this.premierPlanPrallax = this.add.tileSprite(0,0,6400,1280,"fond4");
         this.premierPlanPrallax.setOrigin(0,0);
         this.premierPlanPrallax.setScrollFactor(1,1);
 
@@ -307,9 +336,12 @@ export class niveau_1 extends Phaser.Scene {
         );
 
         // changer le spawn pour le retour
-        if (this.entrance == "retour"){
+        if (retour==true){
             spawnX = 6272
             spawnY = 1088
+
+            respawnX = 6272
+            respawnY = 1088
         }
 
         // affichage du personnage
@@ -332,19 +364,49 @@ export class niveau_1 extends Phaser.Scene {
             groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
         })
 
-        // ajouter une collision entre les ennemis et le sol
-        this.physics.add.collider(groupe_ennemi_A, calque_sol);
-        this.physics.add.collider(groupe_ennemi_A, calque_plateforme);
-
         console.log(groupe_ennemi_A.children.entries[0]);
 
         // agir sur un seul ennemi  // children.each pour agir sur tous
         //groupe_ennemi_A.children.entries[0].setVelocityX(-500);
 
+        // deuxième groupe d'ennemi
+        position_ennemi_B = carteNiveau1.getObjectLayer("ennemi_B_spawn");
+        groupe_ennemi_B = this.physics.add.group();
+        position_ennemi_B.objects.forEach(ennemi => {
+            groupe_ennemi_B.create(ennemi.x,ennemi.y, "blue").body.setGravityY(500);
+        })
+
+        // troisième groupe d'ennemi
+        position_ennemi_C = carteNiveau1.getObjectLayer("ennemi_C_spawn");
+        groupe_ennemi_C = this.physics.add.group();
+        position_ennemi_C.objects.forEach(ennemi => {
+            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500);
+        })
+
+        // quatrième groupe d'ennemi
+        position_ennemi_D = carteNiveau1.getObjectLayer("ennemi_D_spawn");
+        groupe_ennemi_D = this.physics.add.group();
+        position_ennemi_D.objects.forEach(ennemi => {
+            groupe_ennemi_D.create(ennemi.x,ennemi.y, "purple").body.setGravityY(500);
+        })
+
+        // ajouter une collision entre les ennemis et le sol
+        this.physics.add.collider(groupe_ennemi_A, calque_sol);
+        this.physics.add.collider(groupe_ennemi_A, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_B, calque_sol);
+        this.physics.add.collider(groupe_ennemi_B, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_C, calque_sol);
+        this.physics.add.collider(groupe_ennemi_C, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_D, calque_sol);
+        this.physics.add.collider(groupe_ennemi_D, calque_plateforme);
+
         // créer les animations des ennemis
 
         // faire perdre de la vie au joueur lorsqu'un ennemi le touche
         this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_B, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_C, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_D, this.degat, null, this);
 
         // création d'un groupe balle
         munition = this.physics.add.group();
@@ -363,7 +425,7 @@ export class niveau_1 extends Phaser.Scene {
         objDistance.setGravityY(100);
 
         // retirer les objets armures et activer toutes les armures
-        if (this.entrance == "retour"){
+        if (retour==true){
             objCombat.setVisible(false);
             objVitesse.setVisible(false);
             objDistance.setVisible(false);
@@ -475,7 +537,6 @@ export class niveau_1 extends Phaser.Scene {
         boutonPartir = this.add.image(300, 950, 'partir').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonReprendre = this.add.image(960, 950, 'reprendre').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonRecommencer = this.add.image(1600, 950, 'recommencer').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
-        boutonQuitter = this.add.image(960, 950, 'quitter').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
 
         boutonPartir.once('pointerup',this.sceneOverworldQuit,this);
         boutonRecommencer.once('pointerup',this.sceneNiveau1,this);
@@ -483,6 +544,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // affichage de l'écran de victoire et de son bouton quitter
         ecranVictoire = this.add.image(960, 540, 'victoire').setVisible(false).setScrollFactor(0);
+        boutonQuitter = this.add.image(960, 950, 'quitter').setVisible(false).setInteractive().setScrollFactor(0).setInteractive();
         boutonQuitter.once('pointerup',this.Quitter,this);
 
 
@@ -612,11 +674,11 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336 && this.entrance == "overworld") {
+        if (player.x >= 6336 && aller==true) {
             this.sceneOverworldWin();
         }
 
-        if (player.x <= 0 && this.entrance == "retour") {
+        if (player.x <= 0 && retour==true) {
             this.victoire();
         }
 
@@ -902,23 +964,25 @@ export class niveau_1 extends Phaser.Scene {
 
         if (rechargement == true) {
             this.jaugeValeur = this.jaugeValeur - regeneration / 60;
-            this.majJauge();
+            this.majJaugeRecharge();
         }
 
         // mettre en place le système de checkpoint
+        // premier checkpoint
+        if (player.x > 3456 && aller==true){
+            respawnX = 3456
+        }
+
+        if (player.x < 3456 && retour==true){
+            respawnX = 3456
+        }
+
         // faire réaparaitre le joueur lorsqu'il tombe dans le vide
         if (player.y > chute){
-            player.x = respawnX
-            player.y = respawnY
-        }
+            player.x = respawnX;
+            player.y = respawnY;
 
-        // premier checkpoint
-        if (player.x > 3456 && this.entrance=="overworld"){
-            respawnX = 3456
-        }
-
-        if (player.x < 3456 && this.entrance=="retour"){
-            respawnX = 3456
+            this.formeBasique();
         }
 
         // mise en place de la pause
@@ -949,6 +1013,14 @@ export class niveau_1 extends Phaser.Scene {
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
         this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
+        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
+    }
+
+    majJaugeRecharge() {
+        this.graphics.clear();
+        this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
+        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillStyle(0xff4444, 1) // couleur de la partie remplie de la jauge
         this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
     }
 

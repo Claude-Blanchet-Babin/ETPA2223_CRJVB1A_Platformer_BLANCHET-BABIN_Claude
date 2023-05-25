@@ -104,6 +104,12 @@ var regenBatterie = 20
 // variables pour les ennemis
 var position_ennemi_A
 var groupe_ennemi_A
+var position_ennemi_B
+var groupe_ennemi_B
+var position_ennemi_C
+var groupe_ennemi_C
+var position_ennemi_D
+var groupe_ennemi_D
 
 var distance
 var distanceX
@@ -153,6 +159,10 @@ var ecranMort
 var boutonPartir
 var boutonRecommencer
 var boutonReprendre
+
+// variables pour définir l'aller ou le retour
+var aller = true
+var retour = false
 
 export class niveau_3 extends Phaser.Scene {
     constructor() {
@@ -219,6 +229,7 @@ export class niveau_3 extends Phaser.Scene {
         this.load.image("red", "asset/ennemi/rouge.png");
         this.load.image("blue", "asset/ennemi/bleu.png");
         this.load.image("green", "asset/ennemi/vert.png");
+        this.load.image("purple", "asset/ennemi/violet.png");
 
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
@@ -226,6 +237,20 @@ export class niveau_3 extends Phaser.Scene {
 
     // création du niveau
     create() {
+
+        aller = true;
+        retour = false;
+
+        // vérifier s'il s'agit de l'aller ou du retour
+        if(this.entrance=="overworld"){
+            aller = true;
+            retour = false;
+        }
+
+        if(this.entrance=="retour"){
+            aller=false;
+            retour=true;
+        }
 
         playerLife = 4;
         gameOver = false;
@@ -288,9 +313,12 @@ export class niveau_3 extends Phaser.Scene {
         );
 
         // changer le spawn pour le retour
-        if (this.entrance == "retour"){
+        if (retour==true){
             spawnX = 6272
             spawnY = 192
+
+            respawnX = 6272
+            respawnY = 192
         }
 
         // affichage du personnage
@@ -348,19 +376,49 @@ export class niveau_3 extends Phaser.Scene {
             groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
         })
 
-        // ajouter une collision entre les ennemis et le sol
-        this.physics.add.collider(groupe_ennemi_A, calque_sol);
-        this.physics.add.collider(groupe_ennemi_A, calque_plateforme);
-
         console.log(groupe_ennemi_A.children.entries[0]);
 
         // agir sur un seul ennemi  // children.each pour agir sur tous
         //groupe_ennemi_A.children.entries[0].setVelocityX(-500);
 
+        // deuxième groupe d'ennemi
+        position_ennemi_B = carteNiveau3.getObjectLayer("ennemi_B_spawn");
+        groupe_ennemi_B = this.physics.add.group();
+        position_ennemi_B.objects.forEach(ennemi => {
+            groupe_ennemi_B.create(ennemi.x,ennemi.y, "blue").body.setGravityY(500);
+        })
+
+        // troisième groupe d'ennemi
+        position_ennemi_C = carteNiveau3.getObjectLayer("ennemi_C_spawn");
+        groupe_ennemi_C = this.physics.add.group();
+        position_ennemi_C.objects.forEach(ennemi => {
+            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500);
+        })
+
+        // quatrième groupe d'ennemi
+        position_ennemi_D = carteNiveau3.getObjectLayer("ennemi_D_spawn");
+        groupe_ennemi_D = this.physics.add.group();
+        position_ennemi_D.objects.forEach(ennemi => {
+            groupe_ennemi_D.create(ennemi.x,ennemi.y, "purple").body.setGravityY(500);
+        })
+
+        // ajouter une collision entre les ennemis et le sol
+        this.physics.add.collider(groupe_ennemi_A, calque_sol);
+        this.physics.add.collider(groupe_ennemi_A, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_B, calque_sol);
+        this.physics.add.collider(groupe_ennemi_B, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_C, calque_sol);
+        this.physics.add.collider(groupe_ennemi_C, calque_plateforme);
+        this.physics.add.collider(groupe_ennemi_D, calque_sol);
+        this.physics.add.collider(groupe_ennemi_D, calque_plateforme);
+
         // créer les animations des ennemis
 
         // faire perdre de la vie au joueur lorsqu'un ennemi le touche
         this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_B, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_C, this.degat, null, this);
+        this.physics.add.collider(player, groupe_ennemi_D, this.degat, null, this);
 
         // création d'un groupe balle
         munition = this.physics.add.group();
@@ -369,17 +427,17 @@ export class niveau_3 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
 
         // afficher les collectables
-        objCombat = this.physics.add.image(1650, 1500, "objCombat");
+        objCombat = this.physics.add.image(4992, 100, "objCombat");
         objCombat.setGravityY(100);
         
-        objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
+        objVitesse = this.physics.add.image(3264, 100, "objVitesse");
         objVitesse.setGravityY(100);
 
         objDistance = this.physics.add.image(1220, 800, "objDistance");
         objDistance.setGravityY(100);
 
         // retirer les objets armures et activer toutes les armures
-        if (this.entrance == "retour"){
+        if (retour==true){
             objCombat.setVisible(false);
             objVitesse.setVisible(false);
             objDistance.setVisible(false);
@@ -623,11 +681,11 @@ export class niveau_3 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336 && this.entrance == "overworld") {
+        if (player.x >= 6336 && aller==true) {
             this.sceneOverworldWin();
         }
 
-        if (player.x <= 0 && this.entrance == "retour") {
+        if (player.x <= 0 && retour==true) {
             this.sceneNiveau2();
         }
 
@@ -913,25 +971,27 @@ export class niveau_3 extends Phaser.Scene {
 
         if (rechargement == true) {
             this.jaugeValeur = this.jaugeValeur - regeneration / 60;
-            this.majJauge();
+            this.majJaugeRecharge();
         }
 
         // mettre en place le système de checkpoint
+        // premier checkpoint
+        if (player.x > 3200 && player.y < 300 && aller==true){
+            respawnX = 3200
+            respawnY = 200
+        }
+
+        if (player.x < 3200 && player.y < 300 && retour==true){
+            respawnX = 3200
+            respawnY = 200
+        }
+
         // faire réaparaitre le joueur lorsqu'il tombe dans le vide
         if (player.y > 1900){
             player.x = respawnX
             player.y = respawnY
-        }
 
-        // premier checkpoint
-        if (player.x > 3200 && player.y < 300 && this.entrance=="overworld"){
-            respawnX = 3200
-            respawnY = 200
-        }
-
-        if (player.x < 3200 && player.y < 300 && this.entrance=="retour"){
-            respawnX = 3200
-            respawnY = 200
+            this.formeBasique();
         }
 
         // mise en place de la pause
@@ -962,6 +1022,14 @@ export class niveau_3 extends Phaser.Scene {
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
         this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
+        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
+    }
+
+    majJaugeRecharge() {
+        this.graphics.clear();
+        this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
+        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillStyle(0xff4444, 1) // couleur de la partie remplie de la jauge
         this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
     }
 
