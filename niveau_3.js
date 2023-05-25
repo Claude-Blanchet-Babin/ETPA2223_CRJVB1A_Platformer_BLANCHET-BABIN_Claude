@@ -1133,9 +1133,17 @@ export class niveau_3 extends Phaser.Scene {
     }
 
     sceneOverworldQuit() {
-        this.scene.start("overworld",{
-            entrance : "loose3"
-        })
+        if(aller==true){
+            this.scene.start("overworld",{
+                entrance : "loose3"
+            })
+        }
+
+        if(retour==true){
+            this.scene.start("overworld",{
+                entrance : "loose4"
+            })
+        }
     }
 
     sceneOverworldWin() {
@@ -1145,10 +1153,19 @@ export class niveau_3 extends Phaser.Scene {
     }
 
     sceneNiveau3() {
-        this.scene.start("niveau_3",{
-            transfertVie : 4,
-            entrance : "restart",
-        })
+        if(aller==true){
+            this.scene.start("niveau_3",{
+                transfertVie : 4,
+                entrance : "overworld",
+            })
+        }
+
+        if(retour==true){
+            this.scene.start("niveau_3",{
+                transfertVie : 4,
+                entrance : "retour",
+            })
+        }
     }
 
     sceneNiveau2() {

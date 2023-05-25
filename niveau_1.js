@@ -364,6 +364,9 @@ export class niveau_1 extends Phaser.Scene {
             groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
         })
 
+        // correction de la gravité selon l'ennemi
+        groupe_ennemi_A.children.entries[2].setGravity(0);
+
         console.log(groupe_ennemi_A.children.entries[0]);
 
         // agir sur un seul ennemi  // children.each pour agir sur tous
@@ -579,6 +582,23 @@ export class niveau_1 extends Phaser.Scene {
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
+
+        // definir le comportement des ennemis
+        if(groupe_ennemi_A.children.entries[0].x == 1792){
+            groupe_ennemi_A.children.entries[0].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[0].x <= 1600){
+            groupe_ennemi_A.children.entries[0].setVelocityX(100);
+        }
+
+        if(groupe_ennemi_A.children.entries[2].y >= 1216){
+            groupe_ennemi_A.children.entries[2].setVelocityY(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[2].y <= 832){
+            groupe_ennemi_A.children.entries[2].setVelocityY(100);
+        }
 
         console.log(playerLife)
 
@@ -1124,9 +1144,17 @@ export class niveau_1 extends Phaser.Scene {
     }
 
     sceneOverworldQuit() {
-        this.scene.start("overworld",{
-            entrance : "loose1"
-        })
+        if(aller==true){
+            this.scene.start("overworld",{
+                entrance : "loose1"
+            })
+        }
+
+        if(retour==true){
+            this.scene.start("overworld",{
+                entrance : "loose4"
+            })
+        }
     }
 
     sceneOverworldWin() {
@@ -1136,10 +1164,19 @@ export class niveau_1 extends Phaser.Scene {
     }
 
     sceneNiveau1() {
-        this.scene.start("niveau_1",{
-            transfertVie : 4,
-            entrance : "restart",
-        })
+        if(aller==true){
+            this.scene.start("niveau_1",{
+                transfertVie : 4,
+                entrance : "overworld",
+            })
+        }
+
+        if(retour==true){
+            this.scene.start("niveau_1",{
+                transfertVie : 4,
+                entrance : "retour",
+            })
+        }
     }
 
     victoire(){
