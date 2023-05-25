@@ -293,6 +293,13 @@ export class niveau_4 extends Phaser.Scene {
         cldShootEnnemi = false;
         etatCooldown = true;
 
+        cld_Atterrisage = false
+        cld_Coup = false
+        cld_Dash = false
+        cld_Saut = false
+        cld_Tir = false
+        cld_Vol = false
+
         // chargement de la carte 
         carteNiveau4 = this.add.tilemap("carteNiveau4");
 
@@ -303,11 +310,25 @@ export class niveau_4 extends Phaser.Scene {
         );
 
         // affichage du background
-        this.add.image(0, 0, "fond0").setOrigin(0, 0);
-        this.add.image(0, 0, "fond1").setOrigin(0, 0);
-        this.add.image(0, 0, "fond2").setOrigin(0, 0);
-        this.add.image(0, 0, "fond3").setOrigin(0, 0);
-        this.add.image(0, 0, "fond4").setOrigin(0, 0);
+        this.backgroundParallax = this.add.tileSprite(0,0,6400,1280,"fond0");
+        this.backgroundParallax.setOrigin(0,0);
+        this.backgroundParallax.setScrollFactor(1,1);
+    
+        this.quatriemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond1");
+        this.quatriemePlanParallax.setOrigin(0,0);
+        this.quatriemePlanParallax.setScrollFactor(0.85,1);
+    
+        this.troisiemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond2");
+        this.troisiemePlanParallax.setOrigin(0,0);
+        this.troisiemePlanParallax.setScrollFactor(0.8,1);
+    
+        this.secondPlanParallax = this.add.tileSprite(0,0,6400,1280,"fond3");
+        this.secondPlanParallax.setOrigin(0,0);
+        this.secondPlanParallax.setScrollFactor(0.65,1);
+    
+        this.premierPlanPrallax = this.add.tileSprite(0,0,6400,1280,"fond4");
+        this.premierPlanPrallax.setOrigin(0,0);
+        this.premierPlanPrallax.setScrollFactor(1,1);
 
         // affichage des calques
         calque_sol = carteNiveau4.createLayer(
@@ -347,6 +368,14 @@ export class niveau_4 extends Phaser.Scene {
 
             respawnX = 6080
             respawnY = 576
+        }
+
+        if (aller==true){
+            var respawnX = 150
+            var spawnX = 150
+
+            var respawnY = 1050
+            var spawnY = 1050
         }
 
         // affichage du personnage
@@ -629,6 +658,8 @@ export class niveau_4 extends Phaser.Scene {
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
+
+        // definir le comportement des plateformes
 
         if(plateforme.children.entries[0].x <= 2048){
             plateforme.children.entries[0].setVelocityX(100);

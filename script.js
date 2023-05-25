@@ -23,12 +23,12 @@ var config = {
         default: 'arcade',
         arcade: {
         //gravity: { y: 0 },
-        debug: true,
+        debug: false,
         tileBias : 64
     }},
     pixelArt:true,
     input:{gamepad:true},
-    scene: [niveau_4,niveau_1,menu,cinematique,overworld,niveau_3,niveau_2],
+    scene: [menu,niveau_4,niveau_1,cinematique,overworld,niveau_3,niveau_2],
         
 };
 

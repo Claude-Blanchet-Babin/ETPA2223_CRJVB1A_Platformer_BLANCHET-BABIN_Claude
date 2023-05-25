@@ -9,6 +9,7 @@ var esc
 var shift
 var space
 var lockTouche = false
+var platformTouch = false
 
 // variables du joueur
 var player
@@ -73,6 +74,7 @@ var tempsSaut = 1
 var hauteurSaut = 1000
 
 var cooldownCoup = 3000
+var porteCoup = 200
 
 var cooldownAtterrissage = 3000
 var tempsAtterrissage = 1000
@@ -111,9 +113,31 @@ var groupe_ennemi_C
 var position_ennemi_D
 var groupe_ennemi_D
 
-var distance
-var distanceX
-var distanceY
+var munitionEnnemi
+var cldShootEnnemi = false
+var cooldownShoot = 1000
+var etatCooldown = true
+
+var distanceTriggerFollow
+var distanceTriggerFuite
+var distanceTriggerShoot
+
+var distanceKillA
+var distanceKillB
+var distanceKillC
+var distanceKillD
+
+var distanceXa
+var distanceYa
+
+var distanceXb
+var distanceYb
+
+var distanceXc
+var distanceYc
+
+var distanceXd
+var distanceYd
 
 // variables de la carte niveau 1
 var tileset
@@ -238,6 +262,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
+        this.load.image("projectile_ennemi", "asset/objet/projectile_ennemi.png");
     }
 
     // création du niveau
@@ -273,6 +298,16 @@ export class niveau_1 extends Phaser.Scene {
         combatObtenu = false
         distanceObtenu = false
         vitesseObtenu = false
+
+        cldShootEnnemi = false;
+        etatCooldown = true;
+
+        cld_Atterrisage = false
+        cld_Coup = false
+        cld_Dash = false
+        cld_Saut = false
+        cld_Tir = false
+        cld_Vol = false
 
         // chargement de la carte 
         carteNiveau1 = this.add.tilemap("carteNiveau1");
@@ -344,6 +379,14 @@ export class niveau_1 extends Phaser.Scene {
             respawnY = 1088
         }
 
+        if (aller==true){
+            var respawnX = 150
+            var spawnX = 150
+            
+            var respawnY = 1050
+            var spawnY = 1050
+        }
+
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
@@ -413,9 +456,16 @@ export class niveau_1 extends Phaser.Scene {
 
         // création d'un groupe balle
         munition = this.physics.add.group();
+        munitionEnnemi = this.physics.add.group();
+
+        // ajout de la collision entre les balles ennemis et le joueur
+        this.physics.add.overlap(munitionEnnemi,player, this.degatBalle, null, this);
 
         // faire en sorte que les balles touchent les ennemis
         this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
+        this.physics.add.overlap(munition,groupe_ennemi_B,this.degatEnnemi,null,this);
+        this.physics.add.overlap(munition,groupe_ennemi_C,this.degatEnnemi,null,this);
+        this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemi,null,this);
 
         // afficher les collectables
         objCombat = this.physics.add.image(1650, 780, "objCombat");
@@ -583,7 +633,11 @@ export class niveau_1 extends Phaser.Scene {
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
 
-        // definir le comportement des ennemis
+        // definir le comportement des plateformes
+
+        // definir le comportement ennemi
+
+        // definir le comportement des ennemis avec une routine
         if(groupe_ennemi_A.children.entries[0].x == 1792){
             groupe_ennemi_A.children.entries[0].setVelocityX(-100);
         }
@@ -600,24 +654,74 @@ export class niveau_1 extends Phaser.Scene {
             groupe_ennemi_A.children.entries[2].setVelocityY(100);
         }
 
+        // comportement des ennemis qui suivent
+        groupe_ennemi_B.getChildren().forEach(function(enemy){
+            distanceTriggerFollow = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+            if(distanceTriggerFollow<300){
+                this.suivreEnnemi(enemy);
+            }
+        },this)
+
+        // comportement des ennemis qui doivent tirer
+        groupe_ennemi_C.getChildren().forEach(function(enemy){
+            distanceTriggerShoot = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+            //console.log(distanceTriggerFollow)
+
+            if(distanceTriggerShoot<300 && (player.x - enemy.x < 0)){
+                this.shootEnnemiDevant(enemy);
+            }
+
+            if(distanceTriggerShoot<300 && (player.x - enemy.x > 0)){
+                this.shootEnnemiDerriere(enemy);               
+            }
+
+            console.log(cldShootEnnemi)
+
+        },this)
+
+        // comportement des ennemis qui doivent fuir
+        groupe_ennemi_D.getChildren().forEach(function(enemy){
+            distanceTriggerFuite = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+            if(distanceTriggerFuite<300 && (player.x - enemy.x < 0)){
+                this.fuiteEnnemiReculer(enemy);
+            }
+
+            if(distanceTriggerFuite<300 && (player.x - enemy.x > 0)){
+                this.fuiteEnnemiAvancer(enemy);
+            }
+
+            //console.log(distanceTriggerFuite)
+
+        },this)
+
         console.log(playerLife)
 
         // ajout des moyens de déplacement du personnage
-        if (cursors.left.isDown && lockTouche == false){ //si la touche gauche est appuyée
+        if (cursors.left.isDown){ //si la touche gauche est appuyée
             player.setVelocityX(- playerVitesse); //alors vitesse négative en X
+            lockTouche=false
             //player.anims.play('left', true); //et animation => gauche
         }
-        else if (cursors.right.isDown && lockTouche == false){ //sinon si la touche droite est appuyée
+        else if (cursors.right.isDown){ //sinon si la touche droite est appuyée
             player.setVelocityX(playerVitesse); //alors vitesse positive en X
+            lockTouche=false
             //player.anims.play('right', true); //et animation => droite
         }
-        else{ // sinon
-            player.setVelocityX(0); //vitesse nulle
+        else if (lockTouche == true){ // sinon
+                 //vitesse nulle
+            platformTouch = true
             //player.anims.play('turn'); //animation fait face caméra
         }
-        if (cursors.up.isDown && player.body.blocked.down && lockTouche == false){
+        else{
+            player.setVelocityX(0);
+        }
+        if (cursors.up.isDown && player.body.blocked.down){
             //si touche haut appuyée ET que le perso touche le sol
             player.setVelocityY(-playerSaut); //alors vitesse verticale négative
+            lockTouche=false
             //(on saute)
         }
 
@@ -812,14 +916,36 @@ export class niveau_1 extends Phaser.Scene {
             this.jaugeValeur = this.jaugeValeur + activCoup;
 
             groupe_ennemi_A.getChildren().forEach(function(enemy){
-                distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+                distanceKillA = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
 
-                if(distance<300){
+                if(distanceKillA<porteCoup){
                     this.frappeEnnemi(enemy);
                 }
             },this)
-    
-            console.log(distance);
+
+            groupe_ennemi_B.getChildren().forEach(function(enemy){
+                distanceKillB = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                if(distanceKillB<porteCoup){
+                    this.frappeEnnemi(enemy);
+                }
+            },this)
+
+            groupe_ennemi_C.getChildren().forEach(function(enemy){
+                distanceKillC = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                if(distanceKillC<porteCoup){
+                    this.frappeEnnemi(enemy);
+                }
+            },this)
+
+            groupe_ennemi_D.getChildren().forEach(function(enemy){
+                distanceKillD = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                if(distanceKillD<porteCoup){
+                    this.frappeEnnemi(enemy);
+                }
+            },this)
 
 
             // réglage du cooldown de la capacité
@@ -859,16 +985,50 @@ export class niveau_1 extends Phaser.Scene {
             player.setVelocityY(vitesseAtterrissage);
 
             groupe_ennemi_A.getChildren().forEach(function(enemy){
-                distance = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+                distanceKillA = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
 
-                distanceX = Math.abs(player.x - enemy.x);
-                distanceY = Math.abs(player.y - enemy.y);
+                distanceXa = Math.abs(player.x - enemy.x);
+                distanceYa = Math.abs(player.y - enemy.y);
 
-                if(distanceY <= 257 && distanceX <=200){
+                if(distanceYa <= 257 && distanceXa <=200){
                     this.frappeEnnemi(enemy);
                 }
 
-                console.log(distanceX)
+            },this)
+
+            groupe_ennemi_B.getChildren().forEach(function(enemy){
+                distanceKillB = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                distanceXb = Math.abs(player.x - enemy.x);
+                distanceYb = Math.abs(player.y - enemy.y);
+
+                if(distanceYb <= 257 && distanceXb <=200){
+                    this.frappeEnnemi(enemy);
+                }
+
+            },this)
+
+            groupe_ennemi_C.getChildren().forEach(function(enemy){
+                distanceKillC = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                distanceXc = Math.abs(player.x - enemy.x);
+                distanceYc = Math.abs(player.y - enemy.y);
+
+                if(distanceYc <= 257 && distanceXc <=200){
+                    this.frappeEnnemi(enemy);
+                }
+
+            },this)
+
+            groupe_ennemi_D.getChildren().forEach(function(enemy){
+                distanceKillD = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
+
+                distanceXd = Math.abs(player.x - enemy.x);
+                distanceYd = Math.abs(player.y - enemy.y);
+
+                if(distanceYd <= 257 && distanceXd <=200){
+                    this.frappeEnnemi(enemy);
+                }
 
             },this)
         }
@@ -1264,14 +1424,85 @@ export class niveau_1 extends Phaser.Scene {
         }
     }
 
+    degatBalle(player,balle){
+        // le joueur perd de la batterie si une armure est active
+
+        // vérifier que le cooldown de degat est disponible
+        if (playerDegat == false && basique== false){
+            
+            // retirer de la vie au joueur
+            // répercuter directement dans la jauge de vie
+            this.jaugeValeur = this.jaugeValeur + 15;
+            playerDegat = true;
+            playerOpacity = true;
+    
+            // montrer l'invulnérabilité du personnage ne le faisant clignoter avec l'opacité
+            this.time.addEvent({        
+                delay : 100,
+                callback : () => {
+                    if(playerOpacity){
+                        player.alpha = 0.25;
+                        playerOpacity = false
+                    }
+                    else {
+                        player.alpha = 1;
+                        playerOpacity = true;
+                    }
+                },
+                repeat : 19
+            })
+    
+            // activation du cooldown de degat
+            this.time.delayedCall(2000, () => {
+                playerDegat = false;
+                player.alpha = 1;
+            });  
+        }
+
+        // le joueur perd de la vie s'il n'a pas d'armure
+
+        if (playerDegat == false && basique== true){
+            
+            // retirer de la vie au joueur
+            // répercuter directement dans la jauge de vie
+            playerLife = playerLife - 1;
+            playerDegat = true;
+            playerOpacity = true;
+    
+            // montrer l'invulnérabilité du personnage ne le faisant clignoter avec l'opacité
+            this.time.addEvent({        
+                delay : 100,
+                callback : () => {
+                    if(playerOpacity){
+                        player.alpha = 0.25;
+                        playerOpacity = false
+                    }
+                    else {
+                        player.alpha = 1;
+                        playerOpacity = true;
+                    }
+                },
+                repeat : 19
+            })
+    
+            // activation du cooldown de degat
+            this.time.delayedCall(2000, () => {
+                playerDegat = false;
+                player.alpha = 1;
+            });  
+        }
+
+        balle.disableBody(true,true);
+    }
+
     collecteBatterie(player,batterie){
         batterie.disableBody(true, true);
         this.jaugeValeur= this.jaugeValeur - regenBatterie
     }
 
     degatEnnemi (balle,ennemi){
-        balle.disableBody(true,true);
-        ennemi.disableBody(true,true);
+        balle.destroy();
+        ennemi.destroy();
 
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
     }
@@ -1280,6 +1511,58 @@ export class niveau_1 extends Phaser.Scene {
         ennemi.destroy();
 
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+    }
+
+    suivrePlateforme(player,plateforme){
+        lockTouche=true;
+        if(platformTouch==true){
+            player.setVelocityX(plateforme.body.velocity.x);
+        }
+    }
+
+    suivreEnnemi(ennemi){
+        this.physics.moveTo(ennemi,player.x,ennemi.y,100)
+    }
+
+    fuiteEnnemiAvancer(ennemi){
+        ennemi.setVelocityX(-100)
+    }
+
+    fuiteEnnemiReculer(ennemi){
+        ennemi.setVelocityX(100)
+    }
+
+    shootEnnemiDevant(ennemi){
+        if (cldShootEnnemi == false){
+            munitionEnnemi.create(ennemi.x, ennemi.y, "projectile_ennemi").body.setVelocityX(-vitesseTir);
+        }
+
+        cldShootEnnemi = true;
+
+        if (etatCooldown == true){
+            etatCooldown=false;
+            this.time.delayedCall(cooldownShoot, () => {
+                cldShootEnnemi = false
+                etatCooldown = true;
+            });
+        }
+    }    
+
+    shootEnnemiDerriere(ennemi){
+        if(cldShootEnnemi == false){
+            munitionEnnemi.create(ennemi.x, ennemi.y, "projectile_ennemi").body.setVelocityX(vitesseTir);
+        }
+
+        cldShootEnnemi = true;
+
+        if (etatCooldown == true){
+            etatCooldown=false;
+            this.time.delayedCall(cooldownShoot, () => {
+                cldShootEnnemi = false;
+                etatCooldown = true;
+            });
+        }
+
     }
 
 
