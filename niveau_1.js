@@ -560,10 +560,10 @@ export class niveau_1 extends Phaser.Scene {
         // intégrer une jauge
         this.graphics = this.add.graphics();
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
-        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillRect(40, 80, 50, 950).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
         this.jaugeValeur = -100; //pourcentage de la jauge
-        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
+        this.jauge = this.graphics.fillRect(40, 80 + 950, 50, 950 * (this.jaugeValeur / 100)).setScrollFactor(0);
 
         // afficher les cooldown de capacités
         capa_Atterrissage = this.add.image(250, 100, 'atterrissage').setVisible(false).setScrollFactor(0);
@@ -1191,17 +1191,17 @@ export class niveau_1 extends Phaser.Scene {
     majJauge() {
         this.graphics.clear();
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
-        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillRect(40,80,50,950).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xffffff, 1) // couleur de la partie remplie de la jauge
-        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
+        this.jauge = this.graphics.fillRect(40, 80 + 950, 50, 950 * (this.jaugeValeur / 100)).setScrollFactor(0);
     }
 
     majJaugeRecharge() {
         this.graphics.clear();
         this.graphics.fillStyle(0xffffff, 0.5); // couleur, alpha du fond de la jauge
-        this.graphics.fillRect(20, 20, 75, 1000).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
+        this.graphics.fillRect(40, 80, 50, 950).setScrollFactor(0); // position x,y, largeur, hauteur du fond de la jauge
         this.graphics.fillStyle(0xff4444, 1) // couleur de la partie remplie de la jauge
-        this.jauge = this.graphics.fillRect(20, 20 + 1000, 75, 1000 * (this.jaugeValeur / 100)).setScrollFactor(0);
+        this.jauge = this.graphics.fillRect(40, 80 + 950, 50, 950 * (this.jaugeValeur / 100)).setScrollFactor(0);
     }
 
     collecteVitesse() {
