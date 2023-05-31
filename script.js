@@ -23,12 +23,12 @@ var config = {
         default: 'arcade',
         arcade: {
         //gravity: { y: 0 },
-        debug: false,
+        debug: true,
         tileBias : 64
     }},
-    pixelArt:true,
+    pixelArt:false,
     input:{gamepad:true},
-    scene: [menu,niveau_1,niveau_4,cinematique,overworld,niveau_3,niveau_2],
+    scene: [overworld,menu,niveau_1,niveau_4,cinematique,niveau_3,niveau_2],
     scale: {
         mode: Phaser.Scale.FIT, //La fenetre s'adapte avec le même ratio
         width: 1920,

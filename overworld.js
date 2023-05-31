@@ -74,7 +74,11 @@ export class overworld extends Phaser.Scene{
 
 
         // chargement du personnage
-        this.load.image("persoBase","asset/personnage/basique.png");
+        //this.load.image("persoBase","asset/personnage/basique.png");
+
+        this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
         this.load.image("persoCombat","asset/personnage/combat.png");
         this.load.image("persoDistance","asset/personnage/distance.png");
         this.load.image("persoVitesse","asset/personnage/vitesse.png");
@@ -191,10 +195,26 @@ export class overworld extends Phaser.Scene{
         }
 
         // affichage du personnage
+
+
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(1200);
+        player.setSize(64,128).setOffset(32,0);
 
         // afficher les animations du personnage lorsqu'il se déplace
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
 
         // création de la détéction du clavier
         cursors = this.input.keyboard.createCursorKeys();
@@ -237,12 +257,17 @@ export class overworld extends Phaser.Scene{
         // ajout des moyens de déplacement du personnage
         if (cursors.left.isDown){ //si la touche gauche est appuyée
             player.setVelocityX(-playerVitesse); //alors vitesse négative en X
+            player.flipX = true;
+            player.anims.play('droite', true);
             }
             else if (cursors.right.isDown){ //sinon si la touche droite est appuyée
             player.setVelocityX(playerVitesse); //alors vitesse positive en X
+            player.anims.play('droite', true);
+            player.flipX = false;
             }
             else{ // sinon
             player.setVelocityX(0); //vitesse nulle
+            player.anims.play('idle', true);
             }
         
     }

@@ -255,7 +255,10 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
-        this.load.image("red", "asset/ennemi/rouge.png");
+        //this.load.image("red", "asset/ennemi/rouge.png");
+        this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
         this.load.image("blue", "asset/ennemi/bleu.png");
         this.load.image("green", "asset/ennemi/vert.png");
         this.load.image("purple", "asset/ennemi/violet.png");
@@ -447,6 +450,13 @@ export class niveau_1 extends Phaser.Scene {
         this.physics.add.collider(groupe_ennemi_D, calque_plateforme);
 
         // créer les animations des ennemis
+        this.anims.create({
+            key: 'marche_rouge',
+            frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
 
         // faire perdre de la vie au joueur lorsqu'un ennemi le touche
         this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
@@ -652,6 +662,17 @@ export class niveau_1 extends Phaser.Scene {
 
         if(groupe_ennemi_A.children.entries[2].y <= 832){
             groupe_ennemi_A.children.entries[2].setVelocityY(100);
+        }
+
+        // animation 
+        if (groupe_ennemi_A.children.entries[0].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[0].flipX = false;
+            groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[0].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[0].flipX = true;
+            groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
         }
 
         // comportement des ennemis qui suivent
