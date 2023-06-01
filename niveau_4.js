@@ -244,15 +244,45 @@ export class niveau_4 extends Phaser.Scene {
         this.load.image("plateforme", "asset/objet/plateforme.png");
 
         // chargement du personnage
+        this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
         this.load.image("persoBase", "asset/personnage/basique.png");
+
+        this.load.spritesheet("persoCombat","asset/personnage/combat_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
         this.load.image("persoCombat", "asset/personnage/combat.png");
+
+        this.load.spritesheet("persoDistance","asset/personnage/distance_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
         this.load.image("persoDistance", "asset/personnage/distance.png");
+
+        this.load.spritesheet("persoVitesse","asset/personnage/vitesse_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
         this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
+        this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
         this.load.image("red", "asset/ennemi/rouge.png");
+
+        this.load.spritesheet("blue", "asset/ennemi/bleu_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
         this.load.image("blue", "asset/ennemi/bleu.png");
+
+        this.load.spritesheet("green", "asset/ennemi/vert_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
         this.load.image("green", "asset/ennemi/vert.png");
+
+        this.load.spritesheet("purple", "asset/ennemi/violet_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
         this.load.image("purple", "asset/ennemi/violet.png");
 
         // chargement des projectiles
