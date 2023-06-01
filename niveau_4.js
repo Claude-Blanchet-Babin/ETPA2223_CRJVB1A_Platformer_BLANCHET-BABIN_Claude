@@ -247,43 +247,43 @@ export class niveau_4 extends Phaser.Scene {
         this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
         { frameWidth: 128, frameHeight: 128 });
 
-        this.load.image("persoBase", "asset/personnage/basique.png");
+        //this.load.image("persoBase", "asset/personnage/basique.png");
 
         this.load.spritesheet("persoCombat","asset/personnage/combat_sprite.png",
         { frameWidth: 128, frameHeight: 128 });
 
-        this.load.image("persoCombat", "asset/personnage/combat.png");
+        //this.load.image("persoCombat", "asset/personnage/combat.png");
 
         this.load.spritesheet("persoDistance","asset/personnage/distance_sprite.png",
         { frameWidth: 128, frameHeight: 128 });
 
-        this.load.image("persoDistance", "asset/personnage/distance.png");
+        //this.load.image("persoDistance", "asset/personnage/distance.png");
 
         this.load.spritesheet("persoVitesse","asset/personnage/vitesse_sprite.png",
         { frameWidth: 128, frameHeight: 128 });
 
-        this.load.image("persoVitesse", "asset/personnage/vitesse.png");
+        //this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
         this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
         {frameWidth: 90, frameHeight: 90});
 
-        this.load.image("red", "asset/ennemi/rouge.png");
+        //this.load.image("red", "asset/ennemi/rouge.png");
 
         this.load.spritesheet("blue", "asset/ennemi/bleu_sprite.png",
         {frameWidth: 90, frameHeight: 90});
 
-        this.load.image("blue", "asset/ennemi/bleu.png");
+        //this.load.image("blue", "asset/ennemi/bleu.png");
 
         this.load.spritesheet("green", "asset/ennemi/vert_sprite.png",
         {frameWidth: 90, frameHeight: 90});
 
-        this.load.image("green", "asset/ennemi/vert.png");
+        //this.load.image("green", "asset/ennemi/vert.png");
 
         this.load.spritesheet("purple", "asset/ennemi/violet_sprite.png",
         {frameWidth: 90, frameHeight: 90});
 
-        this.load.image("purple", "asset/ennemi/violet.png");
+        //this.load.image("purple", "asset/ennemi/violet.png");
 
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
@@ -411,6 +411,70 @@ export class niveau_4 extends Phaser.Scene {
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
+        player.setSize(64,128).setOffset(32,0);
+
+        // afficher les animations du personnage lorsqu'il se déplace
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        
+
+
+
+
 
         // affichage des plateformes mobiles
         position_plateforme=carteNiveau4.getObjectLayer("plateforme_spawn")
@@ -457,7 +521,6 @@ export class niveau_4 extends Phaser.Scene {
 
         // reprendre l'affichage des calques en mettant le decor
 
-        // afficher les animations du personnage lorsqu'il se déplace
 
         // affichage des ennemis
         // créer un groupe d'ennemi à partir d'un calque
@@ -756,20 +819,74 @@ export class niveau_4 extends Phaser.Scene {
         if (cursors.left.isDown){ //si la touche gauche est appuyée
             player.setVelocityX(- playerVitesse); //alors vitesse négative en X
             lockTouche=false
-            //player.anims.play('left', true); //et animation => gauche
+            player.flipX = true;
+
+            if(basique==true){
+                player.anims.play('droite', true);
+            }
+            if(combat==true){
+                player.anims.play('droite_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('droite_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('droite_vitesse', true);
+            }
         }
+
         else if (cursors.right.isDown){ //sinon si la touche droite est appuyée
             player.setVelocityX(playerVitesse); //alors vitesse positive en X
             lockTouche=false
-            //player.anims.play('right', true); //et animation => droite
+            player.flipX = false;
+
+            if(basique==true){
+                player.anims.play('droite', true);
+            }
+            if(combat==true){
+                player.anims.play('droite_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('droite_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('droite_vitesse', true);
+            }
+
         }
         else if (lockTouche == true){ // sinon
                  //vitesse nulle
             platformTouch = true
+
+            if(basique==true){
+                player.anims.play('idle', true);
+            }
+            if(combat==true){
+                player.anims.play('idle_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('idle_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('idle_vitesse', true);
+            }
             //player.anims.play('turn'); //animation fait face caméra
         }
         else{
             player.setVelocityX(0);
+
+            if(basique==true){
+                player.anims.play('idle', true);
+            }
+            if(combat==true){
+                player.anims.play('idle_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('idle_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('idle_vitesse', true);
+            }
         }
         if (cursors.up.isDown && player.body.blocked.down){
             //si touche haut appuyée ET que le perso touche le sol
