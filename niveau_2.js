@@ -576,9 +576,9 @@ export class niveau_2 extends Phaser.Scene {
         collisionBleu = this.physics.add.collider(player, calque_mur_bleu);
 
         // afficher les armures disponibles
-        interface_combat = this.add.image(650, 100,'combat').setVisible(false).setScrollFactor(0);
-        interface_vitesse = this.add.image(850, 100,'vitesse').setVisible(false).setScrollFactor(0);
-        interface_distance = this.add.image(1050, 100,'distance').setVisible(false).setScrollFactor(0);
+        interface_combat = this.add.image(961, 85,'combat').setVisible(false).setScrollFactor(0);
+        interface_vitesse = this.add.image(860, 85,'vitesse').setVisible(false).setScrollFactor(0);
+        interface_distance = this.add.image(1060, 85,'distance').setVisible(false).setScrollFactor(0);
 
         // création de la caméra
         // taille de la caméra

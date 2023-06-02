@@ -584,9 +584,9 @@ export class niveau_1 extends Phaser.Scene {
         capa_Vol = this.add.image(250, 100, 'vol').setVisible(false).setScrollFactor(0);
 
         // afficher les armures disponibles
-        interface_combat = this.add.image(650, 100,'combat').setVisible(false).setScrollFactor(0);
-        interface_vitesse = this.add.image(850, 100,'vitesse').setVisible(false).setScrollFactor(0);
-        interface_distance = this.add.image(1050, 100,'distance').setVisible(false).setScrollFactor(0);
+        interface_combat = this.add.image(961, 85,'combat').setVisible(false).setScrollFactor(0);
+        interface_vitesse = this.add.image(860, 85,'vitesse').setVisible(false).setScrollFactor(0);
+        interface_distance = this.add.image(1060, 85,'distance').setVisible(false).setScrollFactor(0);
 
         // affichage de l'interface
         lifeUI = this.add.sprite(960,540, "niveauVie").setScrollFactor(0);
