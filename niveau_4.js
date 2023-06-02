@@ -470,11 +470,6 @@ export class niveau_4 extends Phaser.Scene {
             repeat: -1
         });
 
-        
-
-
-
-
 
         // affichage des plateformes mobiles
         position_plateforme=carteNiveau4.getObjectLayer("plateforme_spawn")
@@ -571,6 +566,33 @@ export class niveau_4 extends Phaser.Scene {
         this.physics.add.collider(groupe_ennemi_D, calque_plateforme);
 
         // créer les animations des ennemis
+        this.anims.create({
+            key: 'marche_rouge',
+            frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_bleu',
+            frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_vert',
+            frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_violet',
+            frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
 
         // faire perdre de la vie au joueur lorsqu'un ennemi le touche
         this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
@@ -768,6 +790,42 @@ export class niveau_4 extends Phaser.Scene {
 
         if(plateforme.children.entries[1].x <= 1600){
             plateforme.children.entries[1].setVelocityX(100);
+        }
+
+        // animation routine
+        if (groupe_ennemi_A.children.entries[0].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[0].flipX = false;
+            groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[0].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[0].flipX = true;
+            groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
+        }
+
+        // animation suivre
+        if (groupe_ennemi_B.children.entries[0].body.velocity.x <= 0){
+            groupe_ennemi_B.children.entries[0].flipX = false;
+            groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
+        }
+
+        if (groupe_ennemi_B.children.entries[0].body.velocity.x >= 0){
+            groupe_ennemi_B.children.entries[0].flipX = true;
+            groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
+        }
+
+        // animation tir 
+        groupe_ennemi_C.children.entries[0].play('marche_vert', true);
+
+        // enimation fuite
+        if (groupe_ennemi_D.children.entries[0].body.velocity.x <= 0){
+            groupe_ennemi_D.children.entries[0].flipX = false;
+            groupe_ennemi_D.children.entries[0].play('marche_violet', true);
+        }
+
+        if (groupe_ennemi_D.children.entries[0].body.velocity.x >= 0){
+            groupe_ennemi_D.children.entries[0].flipX = true;
+            groupe_ennemi_D.children.entries[0].play('marche_violet', true);
         }
 
         // comportement des ennemis qui suivent

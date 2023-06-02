@@ -28,7 +28,7 @@ var config = {
     }},
     pixelArt:false,
     input:{gamepad:true},
-    scene: [niveau_4,overworld,menu,niveau_1,cinematique,niveau_3,niveau_2],
+    scene: [menu,niveau_4,overworld,niveau_1,cinematique,niveau_3,niveau_2],
     scale: {
         mode: Phaser.Scale.FIT, //La fenetre s'adapte avec le même ratio
         width: 1920,

@@ -56,7 +56,9 @@ export class overworld extends Phaser.Scene{
     preload(){
 
         // chargement du background
-        this.load.image("fond0","asset/overworld/background.png");
+        this.load.image("fond0","asset/overworld/background_0.png");
+        this.load.image("fond1","asset/overworld/background_1.png");
+        this.load.image("fond2","asset/overworld/background_2.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu","asset/carte/tileset.png");
@@ -98,7 +100,17 @@ export class overworld extends Phaser.Scene{
         );
 
         // affichage du background
-        this.add.image(0,0,"fond0").setOrigin(0,0);
+        this.backgroundParallax = this.add.tileSprite(0,0,5632,1280,"fond0");
+        this.backgroundParallax.setOrigin(0,0);
+        this.backgroundParallax.setScrollFactor(1,1);
+    
+        this.quatriemePlanParallax = this.add.tileSprite(0,0,5632,1280,"fond1");
+        this.quatriemePlanParallax.setOrigin(0,0);
+        this.quatriemePlanParallax.setScrollFactor(0.75,1);
+    
+        this.troisiemePlanParallax = this.add.tileSprite(0,0,5632,1280,"fond2");
+        this.troisiemePlanParallax.setOrigin(0,0);
+        this.troisiemePlanParallax.setScrollFactor(0.5,1);
 
         // affichage des calques
         calque_sol = carteOverworld.createLayer(
@@ -127,16 +139,16 @@ export class overworld extends Phaser.Scene{
         );
 
         // affichage des prévisuels
-        ouvert_1 = this.add.image(750,450,"1ouvert")
+        ouvert_1 = this.add.image(1200,640,"1ouvert")
         
-        ouvert_2 = this.add.image(1400,450,"2ouvert")
-        ferme_2 = this.add.image(1400,450,"2ferme")
+        ouvert_2 = this.add.image(2400,640,"2ouvert")
+        ferme_2 = this.add.image(2400,640,"2ferme")
 
-        ouvert_3 = this.add.image(2050,450,"3ouvert")
-        ferme_3 = this.add.image(2050,450,"3ferme")
+        ouvert_3 = this.add.image(3600,640,"3ouvert")
+        ferme_3 = this.add.image(3600,640,"3ferme")
 
-        ouvert_4 = this.add.image(2700,450,"4ouvert")
-        ferme_4 = this.add.image(2700,450,"4ferme")
+        ouvert_4 = this.add.image(4800,640,"4ouvert")
+        ferme_4 = this.add.image(4800,640,"4ferme")
 
         // vérifier si le joueur vient de finir le niveau ou pas
         if (this.entrance == 'win1'){
@@ -246,7 +258,7 @@ export class overworld extends Phaser.Scene{
         // faire en sorte que la caméra suive le personnage et qu'elle ne sorte pas de l'écran
         this.cameras.main.startFollow(player);
         this.cameras.main.setDeadzone(100,100);
-        this.cameras.main.setBounds(0,0,3520,640);
+        this.cameras.main.setBounds(0,0,5632,1280);
 
     }
     
