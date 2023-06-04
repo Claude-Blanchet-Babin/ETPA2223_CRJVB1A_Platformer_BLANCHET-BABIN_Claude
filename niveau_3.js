@@ -19,8 +19,8 @@ var playerOpacity = false
 var gameOver = false
 var munition
 var playerLife = 4
-var playerVitesse = 300
-var majVitesse = 300
+var playerVitesse = 280
+var majVitesse = 280
 var playerGravity = 1500
 var playerSaut = 900
 var respawnX = 150
@@ -66,18 +66,18 @@ var cld_Vol = false
 
 // variables permettant de changer les valeurs des capacités
 var cooldownDash = 3000
-var tempsDash = 1000
+var tempsDash = 200
 var vitesseDash = 1000
 
 var cooldownSaut = 3000
 var tempsSaut = 1
 var hauteurSaut = 1000
 
-var cooldownCoup = 3000
+var cooldownCoup = 1500
 var porteCoup = 115
 
-var cooldownAtterrissage = 3000
-var tempsAtterrissage = 1000
+var cooldownAtterrissage = 5000
+var tempsAtterrissage = 500
 var vitesseAtterrissage = 3000
 
 var cooldownTir = 1000
@@ -87,21 +87,21 @@ var vitesseRecul = 1000
 
 var cooldownVol = 3000
 var tempsVol = 1000
-var vitesseVol = 200
+var vitesseVol = 150
 var chuteVol = 30
 
 // variables permettant de changer les valeurs de l'utilisation de la batterie
-var consommation = 10
-var regeneration = 20
+var consommation = 3
+var regeneration = 10
 
-var activDash = 15
-var activSaut = 15
-var activAtterrissage = 15
-var activCoup = 15
-var activVol = 15
-var activTir =15
+var activDash = 10
+var activSaut = 10
+var activAtterrissage = 10
+var activCoup = 10
+var activVol = 10
+var activTir =10
 
-var regenBatterie = 20
+var regenBatterie = 25
 
 // variables pour les ennemis
 var position_ennemi_A
@@ -651,7 +651,7 @@ export class niveau_3 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_A,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_B,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_C,this.degatEnnemi,null,this);
-        this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemi,null,this);
+        this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemiD,null,this);
 
         // afficher les collectables
         objCombat = this.physics.add.image(6464, 704, "objCombat");
@@ -1164,7 +1164,7 @@ export class niveau_3 extends Phaser.Scene {
                 distanceKillD = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
 
                 if(distanceKillD<porteCoup){
-                    this.frappeEnnemi(enemy);
+                    this.frappeEnnemiD(enemy);
                 }
             },this)
 
@@ -1211,7 +1211,7 @@ export class niveau_3 extends Phaser.Scene {
                 distanceXa = Math.abs(player.x - enemy.x);
                 distanceYa = Math.abs(player.y - enemy.y);
 
-                if(distanceYa <= 257 && distanceXa <=200){
+                if(distanceYa <= 150 && distanceXa <=100){
                     this.frappeEnnemi(enemy);
                 }
 
@@ -1223,7 +1223,7 @@ export class niveau_3 extends Phaser.Scene {
                 distanceXb = Math.abs(player.x - enemy.x);
                 distanceYb = Math.abs(player.y - enemy.y);
 
-                if(distanceYb <= 257 && distanceXb <=200){
+                if(distanceYb <= 150 && distanceXb <=100){
                     this.frappeEnnemi(enemy);
                 }
 
@@ -1235,7 +1235,7 @@ export class niveau_3 extends Phaser.Scene {
                 distanceXc = Math.abs(player.x - enemy.x);
                 distanceYc = Math.abs(player.y - enemy.y);
 
-                if(distanceYc <= 257 && distanceXc <=200){
+                if(distanceYc <= 150 && distanceXc <=100){
                     this.frappeEnnemi(enemy);
                 }
 
@@ -1247,8 +1247,8 @@ export class niveau_3 extends Phaser.Scene {
                 distanceXd = Math.abs(player.x - enemy.x);
                 distanceYd = Math.abs(player.y - enemy.y);
 
-                if(distanceYd <= 257 && distanceXd <=200){
-                    this.frappeEnnemi(enemy);
+                if(distanceYd <= 150 && distanceXd <=100){
+                    this.frappeEnnemiD(enemy);
                 }
 
             },this)
@@ -1728,10 +1728,27 @@ export class niveau_3 extends Phaser.Scene {
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
     }
 
+    degatEnnemiD (balle,ennemi){
+        balle.destroy();
+        ennemi.destroy();
+
+        batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+        batterie.create(ennemi.x+64, ennemi.y, "batterie").body.setGravityY(500);
+        batterie.create(ennemi.x-64, ennemi.y, "batterie").body.setGravityY(500);
+    }
+
     frappeEnnemi (ennemi){
         ennemi.destroy();
 
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+    }
+
+    frappeEnnemiD (ennemi){
+        ennemi.destroy();
+
+        batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
+        batterie.create(ennemi.x+64, ennemi.y, "batterie").body.setGravityY(500);
+        batterie.create(ennemi.x-64, ennemi.y, "batterie").body.setGravityY(500);
     }
 
     suivrePlateforme(player,plateforme){
