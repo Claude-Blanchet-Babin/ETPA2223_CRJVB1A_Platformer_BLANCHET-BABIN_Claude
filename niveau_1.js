@@ -74,7 +74,7 @@ var tempsSaut = 1
 var hauteurSaut = 1000
 
 var cooldownCoup = 3000
-var porteCoup = 200
+var porteCoup = 115
 
 var cooldownAtterrissage = 3000
 var tempsAtterrissage = 1000
@@ -204,11 +204,11 @@ export class niveau_1 extends Phaser.Scene {
     preload() {
 
         // chargement du background
-        this.load.image("fond0", "asset/niveau1/background_0.png");
-        this.load.image("fond1", "asset/niveau1/background_1.png");
-        this.load.image("fond2", "asset/niveau1/background_2.png");
-        this.load.image("fond3", "asset/niveau1/background_3.png");
-        this.load.image("fond4", "asset/niveau1/background_4.png");
+        this.load.image("fond0_lvl1", "asset/niveau1/background_0.1.png");
+        this.load.image("fond1_lvl1", "asset/niveau1/background_1.1.png");
+        this.load.image("fond2_lvl1", "asset/niveau1/background_2.1.png");
+        this.load.image("fond3_lvl1", "asset/niveau1/background_3.1.png");
+        this.load.image("fond4_lvl1", "asset/niveau1/background_4.1.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu", "asset/carte/tileset.png");
@@ -249,19 +249,46 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("plateforme", "asset/objet/plateforme.png");
 
         // chargement du personnage
-        this.load.image("persoBase", "asset/personnage/basique.png");
-        this.load.image("persoCombat", "asset/personnage/combat.png");
-        this.load.image("persoDistance", "asset/personnage/distance.png");
-        this.load.image("persoVitesse", "asset/personnage/vitesse.png");
+        this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoBase", "asset/personnage/basique.png");
+
+        this.load.spritesheet("persoCombat","asset/personnage/combat_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoCombat", "asset/personnage/combat.png");
+
+        this.load.spritesheet("persoDistance","asset/personnage/distance_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoDistance", "asset/personnage/distance.png");
+
+        this.load.spritesheet("persoVitesse","asset/personnage/vitesse_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoVitesse", "asset/personnage/vitesse.png");
 
         // chargement des ennemis
-        //this.load.image("red", "asset/ennemi/rouge.png");
         this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
         {frameWidth: 90, frameHeight: 90});
 
-        this.load.image("blue", "asset/ennemi/bleu.png");
-        this.load.image("green", "asset/ennemi/vert.png");
-        this.load.image("purple", "asset/ennemi/violet.png");
+        //this.load.image("red", "asset/ennemi/rouge.png");
+
+        this.load.spritesheet("blue", "asset/ennemi/bleu_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("blue", "asset/ennemi/bleu.png");
+
+        this.load.spritesheet("green", "asset/ennemi/vert_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("green", "asset/ennemi/vert.png");
+
+        this.load.spritesheet("purple", "asset/ennemi/violet_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("purple", "asset/ennemi/violet.png");
 
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
@@ -322,25 +349,25 @@ export class niveau_1 extends Phaser.Scene {
         );
 
         // affichage du background
-        this.backgroundParallax = this.add.tileSprite(0,0,6400,1280,"fond0");
-        this.backgroundParallax.setOrigin(0,0);
-        this.backgroundParallax.setScrollFactor(1,1);
+        this.backgroundParallax1 = this.add.tileSprite(0,0,9600,1280,"fond0_lvl1");
+        this.backgroundParallax1.setOrigin(0,0);
+        this.backgroundParallax1.setScrollFactor(1,1);
     
-        this.quatriemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond1");
-        this.quatriemePlanParallax.setOrigin(0,0);
-        this.quatriemePlanParallax.setScrollFactor(0.85,1);
+        this.quatriemePlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond1_lvl1");
+        this.quatriemePlanParallax1.setOrigin(0,0);
+        this.quatriemePlanParallax1.setScrollFactor(0.9,1);
     
-        this.troisiemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond2");
-        this.troisiemePlanParallax.setOrigin(0,0);
-        this.troisiemePlanParallax.setScrollFactor(0.8,1);
+        this.troisiemePlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond2_lvl1");
+        this.troisiemePlanParallax1.setOrigin(0,0);
+        this.troisiemePlanParallax1.setScrollFactor(0.8,1);
     
-        this.secondPlanParallax = this.add.tileSprite(0,0,6400,1280,"fond3");
-        this.secondPlanParallax.setOrigin(0,0);
-        this.secondPlanParallax.setScrollFactor(0.65,1);
+        this.secondPlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond3_lvl1");
+        this.secondPlanParallax1.setOrigin(0,0);
+        this.secondPlanParallax1.setScrollFactor(0.7,1);
     
-        this.premierPlanPrallax = this.add.tileSprite(0,0,6400,1280,"fond4");
-        this.premierPlanPrallax.setOrigin(0,0);
-        this.premierPlanPrallax.setScrollFactor(1,1);
+        this.premierPlanPrallax1 = this.add.tileSprite(0,0,9600,1280,"fond4_lvl1");
+        this.premierPlanPrallax1.setOrigin(0,0);
+        this.premierPlanPrallax1.setScrollFactor(0.6,1);
 
         // affichage des calques
         calque_sol = carteNiveau1.createLayer(
@@ -375,28 +402,83 @@ export class niveau_1 extends Phaser.Scene {
 
         // changer le spawn pour le retour
         if (retour==true){
-            spawnX = 6272
+            spawnX = 9400
             spawnY = 1088
 
-            respawnX = 6272
+            respawnX = 9400
             respawnY = 1088
         }
 
         if (aller==true){
-            var respawnX = 150
-            var spawnX = 150
+            respawnX = 150
+            spawnX = 150
             
-            var respawnY = 1050
-            var spawnY = 1050
+            respawnY = 1050
+            spawnY = 1050
         }
 
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
-
-        // reprendre l'affichage des calques en mettant le decor
+        player.setSize(64,128).setOffset(32,0);
 
         // afficher les animations du personnage lorsqu'il se déplace
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
 
         // affichage des ennemis
         // créer un groupe d'ennemi à partir d'un calque
@@ -407,11 +489,129 @@ export class niveau_1 extends Phaser.Scene {
 
         // faire apparaitre un ennemi selon les emplacements et leur donner une gravité
         position_ennemi_A.objects.forEach(ennemi => {
-            groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
+            groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500).setImmovable(true);
         })
 
         // correction de la gravité selon l'ennemi
-        groupe_ennemi_A.children.entries[2].setGravity(0);
+        groupe_ennemi_A.children.entries[3].setGravity(0);
+        groupe_ennemi_A.children.entries[5].setGravity(0);
+        groupe_ennemi_A.children.entries[7].setGravity(0);
+
+        // haut bas
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[3],
+            y: 800,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[5],
+            y: 340,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[7],
+            y: 600,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        // gauche droite
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[0],
+            x: 1664,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[1],
+            x: 1856,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[2],
+            x: 2176,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[4],
+            x: 3072,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[8],
+            x: 8064,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[9],
+            x: 8064,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[10],
+            x: 8000,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[11],
+            x: 7680,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[12],
+            x: 7616,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[13],
+            x: 7616,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[14],
+            x: 8384,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
 
         console.log(groupe_ennemi_A.children.entries[0]);
 
@@ -429,7 +629,7 @@ export class niveau_1 extends Phaser.Scene {
         position_ennemi_C = carteNiveau1.getObjectLayer("ennemi_C_spawn");
         groupe_ennemi_C = this.physics.add.group();
         position_ennemi_C.objects.forEach(ennemi => {
-            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500);
+            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500).setImmovable(true);
         })
 
         // quatrième groupe d'ennemi
@@ -457,6 +657,27 @@ export class niveau_1 extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'marche_bleu',
+            frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
+            frameRate: 30,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_vert',
+            frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_violet',
+            frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
 
         // faire perdre de la vie au joueur lorsqu'un ennemi le touche
         this.physics.add.collider(player, groupe_ennemi_A, this.degat, null, this);
@@ -478,7 +699,7 @@ export class niveau_1 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemi,null,this);
 
         // afficher les collectables
-        objCombat = this.physics.add.image(1650, 780, "objCombat");
+        objCombat = this.physics.add.image(1728, 780, "objCombat");
         objCombat.setGravityY(100);
         
         objVitesse = this.physics.add.image(1000, 1500, "objVitesse");
@@ -565,7 +786,7 @@ export class niveau_1 extends Phaser.Scene {
         // faire en sorte que la caméra suive le personnage et qu'elle ne sorte pas de l'écran
         this.cameras.main.startFollow(player);
         this.cameras.main.setDeadzone(100, 100);
-        this.cameras.main.setBounds(0,0,6400,1280);
+        this.cameras.main.setBounds(0,0,9600,1280);
 
         // intégrer une jauge
         this.graphics = this.add.graphics();
@@ -648,23 +869,103 @@ export class niveau_1 extends Phaser.Scene {
         // definir le comportement ennemi
 
         // definir le comportement des ennemis avec une routine
-        if(groupe_ennemi_A.children.entries[0].x == 1792){
+
+        /*
+        // 0
+        if(groupe_ennemi_A.children.entries[0].x >= 1920){
             groupe_ennemi_A.children.entries[0].setVelocityX(-100);
         }
 
-        if(groupe_ennemi_A.children.entries[0].x <= 1600){
+        if(groupe_ennemi_A.children.entries[0].x <= 1664){
             groupe_ennemi_A.children.entries[0].setVelocityX(100);
         }
 
-        if(groupe_ennemi_A.children.entries[2].y >= 1216){
-            groupe_ennemi_A.children.entries[2].setVelocityY(-100);
+        // 1
+        if(groupe_ennemi_A.children.entries[1].x >= 2240){
+            groupe_ennemi_A.children.entries[1].setVelocityX(-100);
         }
 
-        if(groupe_ennemi_A.children.entries[2].y <= 832){
-            groupe_ennemi_A.children.entries[2].setVelocityY(100);
+        if(groupe_ennemi_A.children.entries[1].x <= 1856){
+            groupe_ennemi_A.children.entries[1].setVelocityX(100);
         }
 
-        // animation 
+        // 2
+        if(groupe_ennemi_A.children.entries[2].x >= 2432){
+            groupe_ennemi_A.children.entries[2].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[2].x <= 2176){
+            groupe_ennemi_A.children.entries[2].setVelocityX(100);
+        }
+
+        // 4
+        if(groupe_ennemi_A.children.entries[4].x >= 3200){
+            groupe_ennemi_A.children.entries[4].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[4].x <= 3008){
+            groupe_ennemi_A.children.entries[4].setVelocityX(100);
+        }
+
+        // 8
+        if(groupe_ennemi_A.children.entries[8].x >= 8050){
+            groupe_ennemi_A.children.entries[8].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[8].x <= 7650){
+            groupe_ennemi_A.children.entries[8].setVelocityX(100);
+        }
+
+        // 9
+        if(groupe_ennemi_A.children.entries[9].x >= 7950){
+            groupe_ennemi_A.children.entries[9].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[9].x <= 7700){
+            groupe_ennemi_A.children.entries[9].setVelocityX(100);
+        }
+
+        // 10
+        if(groupe_ennemi_A.children.entries[10].x >= 7950){
+            groupe_ennemi_A.children.entries[10].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[10].x <= 7650){
+            groupe_ennemi_A.children.entries[10].setVelocityX(100);
+        }
+
+        // 11
+        if(groupe_ennemi_A.children.entries[11].x >= 7950){
+            groupe_ennemi_A.children.entries[11].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[11].x <= 7650){
+            groupe_ennemi_A.children.entries[11].setVelocityX(100);
+        }
+
+        // 12
+        if(groupe_ennemi_A.children.entries[12].x >= 7950){
+            groupe_ennemi_A.children.entries[12].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[12].x <= 7700){
+            groupe_ennemi_A.children.entries[12].setVelocityX(100);
+        }
+
+        // 13
+        if(groupe_ennemi_A.children.entries[13].x >= 8050){
+            groupe_ennemi_A.children.entries[13].setVelocityX(-100);
+        }
+
+        if(groupe_ennemi_A.children.entries[13].x <= 7650){
+            groupe_ennemi_A.children.entries[13].setVelocityX(100);
+        }
+        */
+
+
+
+        // animation des ennemis routine
+        /*
         if (groupe_ennemi_A.children.entries[0].body.velocity.x <= 0){
             groupe_ennemi_A.children.entries[0].flipX = false;
             groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
@@ -674,6 +975,157 @@ export class niveau_1 extends Phaser.Scene {
             groupe_ennemi_A.children.entries[0].flipX = true;
             groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
         }
+
+        if (groupe_ennemi_A.children.entries[1].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[1].flipX = false;
+            groupe_ennemi_A.children.entries[1].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[1].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[1].flipX = true;
+            groupe_ennemi_A.children.entries[1].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[2].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[2].flipX = false;
+            groupe_ennemi_A.children.entries[2].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[2].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[2].flipX = true;
+            groupe_ennemi_A.children.entries[2].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[4].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[4].flipX = false;
+            groupe_ennemi_A.children.entries[4].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[4].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[4].flipX = true;
+            groupe_ennemi_A.children.entries[4].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[6].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[6].flipX = false;
+            groupe_ennemi_A.children.entries[6].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[6].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[6].flipX = true;
+            groupe_ennemi_A.children.entries[6].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[8].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[8].flipX = false;
+            groupe_ennemi_A.children.entries[8].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[8].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[8].flipX = true;
+            groupe_ennemi_A.children.entries[8].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[9].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[9].flipX = false;
+            groupe_ennemi_A.children.entries[9].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[9].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[9].flipX = true;
+            groupe_ennemi_A.children.entries[9].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[10].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[10].flipX = false;
+            groupe_ennemi_A.children.entries[10].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[10].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[10].flipX = true;
+            groupe_ennemi_A.children.entries[10].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[11].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[11].flipX = false;
+            groupe_ennemi_A.children.entries[11].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[11].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[11].flipX = true;
+            groupe_ennemi_A.children.entries[11].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[12].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[12].flipX = false;
+            groupe_ennemi_A.children.entries[12].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[12].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[12].flipX = true;
+            groupe_ennemi_A.children.entries[12].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[13].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[13].flipX = false;
+            groupe_ennemi_A.children.entries[13].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[13].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[13].flipX = true;
+            groupe_ennemi_A.children.entries[13].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[14].body.velocity.x <= 0){
+            groupe_ennemi_A.children.entries[14].flipX = false;
+            groupe_ennemi_A.children.entries[13].play('marche_rouge', true);
+        }
+
+        if (groupe_ennemi_A.children.entries[14].body.velocity.x >= 0){
+            groupe_ennemi_A.children.entries[14].flipX = true;
+            groupe_ennemi_A.children.entries[14].play('marche_rouge', true);
+        }
+        */
+
+
+        // animation des ennemis qui suivent
+        /*
+        if (groupe_ennemi_B.children.entries[0].body.velocity.x <= 0){
+            groupe_ennemi_B.children.entries[0].flipX = false;
+            groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
+        }
+
+        
+        if (groupe_ennemi_B.children.entries[0].body.velocity.x >= 0){
+            groupe_ennemi_B.children.entries[0].flipX = true;
+            groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
+        }
+
+        if (groupe_ennemi_B.children.entries[1].body.velocity.x <= 0){
+            groupe_ennemi_B.children.entries[1].flipX = false;
+            groupe_ennemi_B.children.entries[1].play('marche_bleu', true);
+        }
+
+        if (groupe_ennemi_B.children.entries[1].body.velocity.x >= 0){
+            groupe_ennemi_B.children.entries[1].flipX = true;
+            groupe_ennemi_B.children.entries[1].play('marche_bleu', true);
+        }
+
+        if (groupe_ennemi_B.children.entries[2].body.velocity.x <= 0){
+            groupe_ennemi_B.children.entries[2].flipX = false;
+            groupe_ennemi_B.children.entries[2].play('marche_bleu', true);
+        }
+
+        if (groupe_ennemi_B.children.entries[2].body.velocity.x >= 0){
+            groupe_ennemi_B.children.entries[2].flipX = true;
+            groupe_ennemi_B.children.entries[2].play('marche_bleu', true);
+        }
+        */
+
+        // animation de l'ennemi qui tire
+        /*
+        groupe_ennemi_C.children.entries[0].play('marche_vert', true);
+        */
 
         // comportement des ennemis qui suivent
         groupe_ennemi_B.getChildren().forEach(function(enemy){
@@ -724,20 +1176,74 @@ export class niveau_1 extends Phaser.Scene {
         if (cursors.left.isDown){ //si la touche gauche est appuyée
             player.setVelocityX(- playerVitesse); //alors vitesse négative en X
             lockTouche=false
-            //player.anims.play('left', true); //et animation => gauche
+            player.flipX = true;
+
+            if(basique==true){
+                player.anims.play('droite', true);
+            }
+            if(combat==true){
+                player.anims.play('droite_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('droite_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('droite_vitesse', true);
+            }
         }
+
         else if (cursors.right.isDown){ //sinon si la touche droite est appuyée
             player.setVelocityX(playerVitesse); //alors vitesse positive en X
             lockTouche=false
-            //player.anims.play('right', true); //et animation => droite
+            player.flipX = false;
+
+            if(basique==true){
+                player.anims.play('droite', true);
+            }
+            if(combat==true){
+                player.anims.play('droite_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('droite_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('droite_vitesse', true);
+            }
+
         }
         else if (lockTouche == true){ // sinon
                  //vitesse nulle
             platformTouch = true
+
+            if(basique==true){
+                player.anims.play('idle', true);
+            }
+            if(combat==true){
+                player.anims.play('idle_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('idle_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('idle_vitesse', true);
+            }
             //player.anims.play('turn'); //animation fait face caméra
         }
         else{
             player.setVelocityX(0);
+
+            if(basique==true){
+                player.anims.play('idle', true);
+            }
+            if(combat==true){
+                player.anims.play('idle_combat', true);
+            }
+            if(distance==true){
+                player.anims.play('idle_distance', true);
+            }
+            if(vitesse==true){
+                player.anims.play('idle_vitesse', true);
+            }
         }
         if (cursors.up.isDown && player.body.blocked.down){
             //si touche haut appuyée ET que le perso touche le sol
@@ -745,6 +1251,7 @@ export class niveau_1 extends Phaser.Scene {
             lockTouche=false
             //(on saute)
         }
+
 
         // animation de la jauge de vie
         if (playerLife == 4){
@@ -819,7 +1326,7 @@ export class niveau_1 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336 && aller==true) {
+        if (player.x >= 9664 && aller==true) {
             this.sceneOverworldWin();
         }
 
@@ -1170,12 +1677,12 @@ export class niveau_1 extends Phaser.Scene {
 
         // mettre en place le système de checkpoint
         // premier checkpoint
-        if (player.x > 3456 && aller==true){
-            respawnX = 3456
+        if (player.x > 4864 && aller==true){
+            respawnX = 4864
         }
 
-        if (player.x < 3456 && retour==true){
-            respawnX = 3456
+        if (player.x < 4864 && retour==true){
+            respawnX = 4864
         }
 
         // faire réaparaitre le joueur lorsqu'il tombe dans le vide

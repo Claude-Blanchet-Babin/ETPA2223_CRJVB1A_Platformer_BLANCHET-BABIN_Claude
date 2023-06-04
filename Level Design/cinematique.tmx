@@ -27,7 +27,22 @@
     <property name="solide" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="27">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="30">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="31">
    <properties>
     <property name="solide" type="bool" value="true"/>
    </properties>
@@ -52,6 +67,46 @@
     <property name="solide" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="37">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="40">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="41">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="48">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="50">
    <properties>
     <property name="solide" type="bool" value="true"/>
@@ -63,6 +118,21 @@
    </properties>
   </tile>
   <tile id="52">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="solide" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="58">
    <properties>
     <property name="solide" type="bool" value="true"/>
    </properties>
@@ -80,9 +150,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-31,31,31,31,31,31,31,31,31,31,31,31,31,0,0,0,0,0,0,0,31,31,31,31,31,31,31,31,31,31,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+31,31,31,31,31,31,31,31,31,31,31,31,32,0,0,0,0,0,0,0,2147483680,31,31,31,31,31,31,31,31,31,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

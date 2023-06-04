@@ -13,9 +13,9 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 0, 0, 0, 0, 0, 0, 0, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 32, 0, 0, 0, 0, 0, 0, 0, 2147483680, 31, 31, 31, 31, 31, 31, 31, 31, 31,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -95,7 +95,34 @@
                         }]
                 }, 
                 {
+                 "id":27,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":28,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":30,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":31,
                  "properties":[
                         {
                          "name":"solide",
@@ -140,6 +167,78 @@
                         }]
                 }, 
                 {
+                 "id":37,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":38,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":40,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":41,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":42,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":46,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":47,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":48,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":50,
                  "properties":[
                         {
@@ -159,6 +258,33 @@
                 }, 
                 {
                  "id":52,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":56,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":57,
+                 "properties":[
+                        {
+                         "name":"solide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":58,
                  "properties":[
                         {
                          "name":"solide",

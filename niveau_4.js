@@ -74,7 +74,7 @@ var tempsSaut = 1
 var hauteurSaut = 1000
 
 var cooldownCoup = 3000
-var porteCoup = 200
+var porteCoup = 115
 
 var cooldownAtterrissage = 3000
 var tempsAtterrissage = 1000
@@ -202,11 +202,11 @@ export class niveau_4 extends Phaser.Scene {
     preload() {
 
         // chargement du background
-        this.load.image("fond0", "asset/niveau4/background_0.png");
-        this.load.image("fond1", "asset/niveau4/background_1.png");
-        this.load.image("fond2", "asset/niveau4/background_2.png");
-        this.load.image("fond3", "asset/niveau4/background_3.png");
-        this.load.image("fond4", "asset/niveau4/background_4.png");
+        this.load.image("fond0_lvl4", "asset/niveau4/background_0.4.png");
+        this.load.image("fond1_lvl4", "asset/niveau4/background_1.4.png");
+        this.load.image("fond2_lvl4", "asset/niveau4/background_2.4.png");
+        this.load.image("fond3_lvl4", "asset/niveau4/background_3.4.png");
+        this.load.image("fond4_lvl4", "asset/niveau4/background_4.4.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu", "asset/carte/tileset.png");
@@ -340,25 +340,25 @@ export class niveau_4 extends Phaser.Scene {
         );
 
         // affichage du background
-        this.backgroundParallax = this.add.tileSprite(0,0,6400,1280,"fond0");
-        this.backgroundParallax.setOrigin(0,0);
-        this.backgroundParallax.setScrollFactor(1,1);
+        this.backgroundParallax4 = this.add.tileSprite(0,0,9600,1280,"fond0_lvl4");
+        this.backgroundParallax4.setOrigin(0,0);
+        this.backgroundParallax4.setScrollFactor(1,1);
     
-        this.quatriemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond1");
-        this.quatriemePlanParallax.setOrigin(0,0);
-        this.quatriemePlanParallax.setScrollFactor(0.85,1);
+        this.quatriemePlanParallax4 = this.add.tileSprite(0,0,9600,1280,"fond1_lvl4");
+        this.quatriemePlanParallax4.setOrigin(0,0);
+        this.quatriemePlanParallax4.setScrollFactor(0.9,1);
     
-        this.troisiemePlanParallax = this.add.tileSprite(0,0,6400,1280,"fond2");
-        this.troisiemePlanParallax.setOrigin(0,0);
-        this.troisiemePlanParallax.setScrollFactor(0.8,1);
+        this.troisiemePlanParallax4 = this.add.tileSprite(0,0,9600,1280,"fond2_lvl4");
+        this.troisiemePlanParallax4.setOrigin(0,0);
+        this.troisiemePlanParallax4.setScrollFactor(0.8,1);
     
-        this.secondPlanParallax = this.add.tileSprite(0,0,6400,1280,"fond3");
-        this.secondPlanParallax.setOrigin(0,0);
-        this.secondPlanParallax.setScrollFactor(0.65,1);
+        this.secondPlanParallax4 = this.add.tileSprite(0,0,9600,1280,"fond3_lvl4");
+        this.secondPlanParallax4.setOrigin(0,0);
+        this.secondPlanParallax4.setScrollFactor(0.7,1);
     
-        this.premierPlanPrallax = this.add.tileSprite(0,0,6400,1280,"fond4");
-        this.premierPlanPrallax.setOrigin(0,0);
-        this.premierPlanPrallax.setScrollFactor(1,1);
+        this.premierPlanPrallax4 = this.add.tileSprite(0,0,9600,1280,"fond4_lvl4");
+        this.premierPlanPrallax4.setOrigin(0,0);
+        this.premierPlanPrallax4.setScrollFactor(0.6,1);
 
         // affichage des calques
         calque_sol = carteNiveau4.createLayer(
@@ -393,19 +393,19 @@ export class niveau_4 extends Phaser.Scene {
 
         // changer le spawn pour le retour
         if (retour==true){
-            spawnX = 6080
+            spawnX = 9400
             spawnY = 576
 
-            respawnX = 6080
+            respawnX = 9400
             respawnY = 576
         }
 
         if (aller==true){
-            var respawnX = 150
-            var spawnX = 150
+            respawnX = 150
+            spawnX = 150
 
-            var respawnY = 1050
-            var spawnY = 1050
+            respawnY = 1050
+            spawnY = 1050
         }
 
         // affichage du personnage
@@ -481,35 +481,18 @@ export class niveau_4 extends Phaser.Scene {
 
         this.physics.add.collider(player,plateforme,this.suivrePlateforme,null,this);
 
-        // définir les mouvements des plateformes
-        /*this.tweens.add({
-            targets : plateforme.children.entries[0],
-            x: 2304,
-            duration: 2000,
-            repeat : -1,
-            yoyo : true
-        });*/
-
-        /*this.tweens.add({
-            targets : plateforme.children.entries[1],
-            x: 2432,
-            duration: 2000,
-            repeat : -1,
-            yoyo : true
-        });*/
-
         this.tweens.add({
-            targets : plateforme.children.entries[2],
+            targets : plateforme.children.entries[3],
             y: 512,
-            duration: 3000,
+            duration: 6000,
             repeat : -1,
             yoyo : true
         });
 
         this.tweens.add({
-            targets : plateforme.children.entries[3],
-            y: 256,
-            duration: 3000,
+            targets : plateforme.children.entries[6],
+            y: 512,
+            duration: 6000,
             repeat : -1,
             yoyo : true
         });
@@ -526,8 +509,60 @@ export class niveau_4 extends Phaser.Scene {
 
         // faire apparaitre un ennemi selon les emplacements et leur donner une gravité
         position_ennemi_A.objects.forEach(ennemi => {
-            groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500);
+            groupe_ennemi_A.create(ennemi.x,ennemi.y, "red").body.setGravityY(500).setImmovable(true);
         })
+
+        // correction de la gravité selon l'ennemi
+        groupe_ennemi_A.children.entries[0].setGravity(0);
+        groupe_ennemi_A.children.entries[5].setGravity(0);
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[0],
+            y: 448,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[1],
+            x: 3264,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[2],
+            x: 3200,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[3],
+            x: 2688,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[4],
+            x: 2624,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
+
+        this.tweens.add({
+            targets : groupe_ennemi_A.children.entries[5],
+            y: 448,
+            duration: 3000,
+            repeat : -1,
+            yoyo : true
+        });
 
         //console.log(groupe_ennemi_A.children.entries[0]);
 
@@ -545,7 +580,7 @@ export class niveau_4 extends Phaser.Scene {
         position_ennemi_C = carteNiveau4.getObjectLayer("ennemi_C_spawn");
         groupe_ennemi_C = this.physics.add.group();
         position_ennemi_C.objects.forEach(ennemi => {
-            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500);
+            groupe_ennemi_C.create(ennemi.x,ennemi.y, "green").body.setGravityY(500).setImmovable(true);
         })
 
         // quatrième groupe d'ennemi
@@ -614,13 +649,13 @@ export class niveau_4 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemi,null,this);
 
         // afficher les collectables
-        objCombat = this.physics.add.image(1175, 650, "objCombat");
+        objCombat = this.physics.add.image(1472, 576, "objCombat");
         objCombat.setGravityY(100);
         
-        objVitesse = this.physics.add.image(750, 950, "objVitesse");
+        objVitesse = this.physics.add.image(960, 896, "objVitesse");
         objVitesse.setGravityY(100);
 
-        objDistance = this.physics.add.image(500, 1150, "objDistance");
+        objDistance = this.physics.add.image(832, 1088, "objDistance");
         objDistance.setGravityY(100);
 
         // retirer les objets armures et activer toutes les armures
@@ -701,7 +736,7 @@ export class niveau_4 extends Phaser.Scene {
         // faire en sorte que la caméra suive le personnage et qu'elle ne sorte pas de l'écran
         this.cameras.main.startFollow(player);
         this.cameras.main.setDeadzone(100, 100);
-        this.cameras.main.setBounds(0,0,6400,1280);
+        this.cameras.main.setBounds(0,0,9600,1280);
 
         // intégrer une jauge
         this.graphics = this.add.graphics();
@@ -776,23 +811,48 @@ export class niveau_4 extends Phaser.Scene {
 
         // definir le comportement des plateformes
 
-        if(plateforme.children.entries[0].x <= 2048){
+        if(plateforme.children.entries[0].x <= 2580){
             plateforme.children.entries[0].setVelocityX(100);
         }
 
-        if(plateforme.children.entries[0].x >= 2368){
+        if(plateforme.children.entries[0].x >= 2816){
             plateforme.children.entries[0].setVelocityX(-100);
         }
 
-        if(plateforme.children.entries[1].x == 1792){
+        if(plateforme.children.entries[1].x >= 3300){
             plateforme.children.entries[1].setVelocityX(-100);
         }
 
-        if(plateforme.children.entries[1].x <= 1600){
+        if(plateforme.children.entries[1].x <= 3008){
             plateforme.children.entries[1].setVelocityX(100);
         }
 
+        if(plateforme.children.entries[2].x <= 4370){
+            plateforme.children.entries[2].setVelocityX(100);
+        }
+
+        if(plateforme.children.entries[2].x >= 5248){
+            plateforme.children.entries[2].setVelocityX(-100);
+        }
+
+        if(plateforme.children.entries[4].x <= 6730){
+            plateforme.children.entries[4].setVelocityX(100);
+        }
+
+        if(plateforme.children.entries[4].x >= 7104){
+            plateforme.children.entries[4].setVelocityX(-100);
+        }
+
+        if(plateforme.children.entries[5].x >= 7730){
+            plateforme.children.entries[5].setVelocityX(-100);
+        }
+
+        if(plateforme.children.entries[5].x <= 7360){
+            plateforme.children.entries[5].setVelocityX(100);
+        }
+
         // animation routine
+        /*
         if (groupe_ennemi_A.children.entries[0].body.velocity.x <= 0){
             groupe_ennemi_A.children.entries[0].flipX = false;
             groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
@@ -802,8 +862,10 @@ export class niveau_4 extends Phaser.Scene {
             groupe_ennemi_A.children.entries[0].flipX = true;
             groupe_ennemi_A.children.entries[0].play('marche_rouge', true);
         }
+        */
 
         // animation suivre
+        /*
         if (groupe_ennemi_B.children.entries[0].body.velocity.x <= 0){
             groupe_ennemi_B.children.entries[0].flipX = false;
             groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
@@ -813,11 +875,15 @@ export class niveau_4 extends Phaser.Scene {
             groupe_ennemi_B.children.entries[0].flipX = true;
             groupe_ennemi_B.children.entries[0].play('marche_bleu', true);
         }
+        */
 
-        // animation tir 
+        // animation tir
+        /*
         groupe_ennemi_C.children.entries[0].play('marche_vert', true);
+        */
 
-        // enimation fuite
+        // animation fuite
+        /*
         if (groupe_ennemi_D.children.entries[0].body.velocity.x <= 0){
             groupe_ennemi_D.children.entries[0].flipX = false;
             groupe_ennemi_D.children.entries[0].play('marche_violet', true);
@@ -827,6 +893,7 @@ export class niveau_4 extends Phaser.Scene {
             groupe_ennemi_D.children.entries[0].flipX = true;
             groupe_ennemi_D.children.entries[0].play('marche_violet', true);
         }
+        */
 
         // comportement des ennemis qui suivent
         groupe_ennemi_B.getChildren().forEach(function(enemy){
@@ -1028,7 +1095,7 @@ export class niveau_4 extends Phaser.Scene {
         }
 
         // vérifier la position du joueur pour terminer le niveau
-        if (player.x >= 6336 && aller==true) {
+        if (player.x >= 9664 && aller==true) {
             this.sceneCinematique();
         }
 
@@ -1380,12 +1447,12 @@ export class niveau_4 extends Phaser.Scene {
 
         // mettre en place le système de checkpoint
         // premier checkpoint
-        if (player.x > 1408 && aller==true){
-            respawnX = 1408
+        if (player.x > 3584 && aller==true){
+            respawnX = 3584
         }
 
-        if (player.x < 1408 && retour==true){
-            respawnX = 1408
+        if (player.x < 3584 && retour==true){
+            respawnX = 3584
         }
 
         // faire réaparaitre le joueur lorsqu'il tombe dans le vide

@@ -28,7 +28,7 @@ export class cinematique extends Phaser.Scene {
     preload() {
 
         // chargement du background et du foreground
-        this.load.image("fond", "asset/cinematique/background_0.png");
+        this.load.image("fond_cinematique", "asset/cinematique/background_0.png");
         this.load.image("devant", "asset/cinematique/foreground.png");
 
         // chargement du message
@@ -39,10 +39,46 @@ export class cinematique extends Phaser.Scene {
         this.load.tilemapTiledJSON("carteCinematique", "asset/carte/cinematique.json");
 
         // chargement du personnage
-        this.load.image("persoBase", "asset/personnage/basique.png");
-        this.load.image("persoCombat", "asset/personnage/combat.png");
-        this.load.image("persoDistance", "asset/personnage/distance.png");
-        this.load.image("persoVitesse", "asset/personnage/vitesse.png");
+        this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoBase", "asset/personnage/basique.png");
+
+        this.load.spritesheet("persoCombat","asset/personnage/combat_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoCombat", "asset/personnage/combat.png");
+
+        this.load.spritesheet("persoDistance","asset/personnage/distance_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoDistance", "asset/personnage/distance.png");
+
+        this.load.spritesheet("persoVitesse","asset/personnage/vitesse_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoVitesse", "asset/personnage/vitesse.png");
+
+        // chargement des ennemis
+        this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("red", "asset/ennemi/rouge.png");
+
+        this.load.spritesheet("blue", "asset/ennemi/bleu_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("blue", "asset/ennemi/bleu.png");
+
+        this.load.spritesheet("green", "asset/ennemi/vert_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("green", "asset/ennemi/vert.png");
+
+        this.load.spritesheet("purple", "asset/ennemi/violet_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("purple", "asset/ennemi/violet.png");
     }
 
     // création du niveau
@@ -58,7 +94,7 @@ export class cinematique extends Phaser.Scene {
         );
 
         // affichage du background
-        this.add.image(0, 0, "fond").setOrigin(0, 0);
+        this.add.image(0, 0, "fond_cinematique").setOrigin(0, 0);
 
         // affichage des calques
         calque_sol = carteCinematique.createLayer(
@@ -69,9 +105,103 @@ export class cinematique extends Phaser.Scene {
         // affichage du personnage
         player = this.physics.add.sprite(spawnX, spawnY, "persoBase");
         player.setGravityY(playerGravity);
+        player.setSize(64,128).setOffset(32,0);
+
+        // afficher les animations du personnage lorsqu'il se déplace
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
+            frameRate: 20,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_retour',
+            frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
+            frameRate: 60,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        // créer les animations des ennemis
+        this.anims.create({
+            key: 'marche_rouge',
+            frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_bleu',
+            frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_vert',
+            frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_violet',
+            frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
 
         // reprendre l'affichage des calques en mettant le decor
-        this.add.image(0, 0, "devant").setOrigin(0, 0);
+        this.add.image(0, 0, "devant").setOrigin(0, 0).setScrollFactor(0);
 
         // affciher le message
         message = this.add.image(0, 0, "message").setVisible(false).setOrigin(0, 0);
@@ -128,16 +258,22 @@ export class cinematique extends Phaser.Scene {
         // faire une pause au joueur
         if (avancer == false && reculer == false){
             player.setVelocityX(0)
+            player.anims.play('idle', true);
         }
 
         // faire reculer le joueur
         if (reculer == true && avancer == false){
             player.setVelocityX(-300);
+            player.flipX = true;
+            player.anims.play('droite_retour', true);
+            
         }
 
         // faire avancer le joueur
         if (avancer == true && reculer == false){
             player.setVelocityX(100);
+            player.flipX = false;
+            player.anims.play('droite', true);
         }
 
         // le stopper

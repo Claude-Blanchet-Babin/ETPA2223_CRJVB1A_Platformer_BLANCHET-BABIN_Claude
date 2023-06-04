@@ -17,7 +17,7 @@ var majVitesse = 300
 var playerGravity = 1500
 var playerSaut = 900
 var spawnX = 100
-var spawnY = 850
+var spawnY = 1024
 
 // variables de la carte overworld
 var carteOverworld
@@ -78,12 +78,47 @@ export class overworld extends Phaser.Scene{
         // chargement du personnage
         //this.load.image("persoBase","asset/personnage/basique.png");
 
+        // chargement du personnage
         this.load.spritesheet("persoBase","asset/personnage/basique_sprite.png",
         { frameWidth: 128, frameHeight: 128 });
 
-        this.load.image("persoCombat","asset/personnage/combat.png");
-        this.load.image("persoDistance","asset/personnage/distance.png");
-        this.load.image("persoVitesse","asset/personnage/vitesse.png");
+        //this.load.image("persoBase", "asset/personnage/basique.png");
+
+        this.load.spritesheet("persoCombat","asset/personnage/combat_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoCombat", "asset/personnage/combat.png");
+
+        this.load.spritesheet("persoDistance","asset/personnage/distance_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoDistance", "asset/personnage/distance.png");
+
+        this.load.spritesheet("persoVitesse","asset/personnage/vitesse_sprite.png",
+        { frameWidth: 128, frameHeight: 128 });
+
+        //this.load.image("persoVitesse", "asset/personnage/vitesse.png");
+
+        // chargement des ennemis
+        this.load.spritesheet("red", "asset/ennemi/rouge_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("red", "asset/ennemi/rouge.png");
+
+        this.load.spritesheet("blue", "asset/ennemi/bleu_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("blue", "asset/ennemi/bleu.png");
+
+        this.load.spritesheet("green", "asset/ennemi/vert_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("green", "asset/ennemi/vert.png");
+
+        this.load.spritesheet("purple", "asset/ennemi/violet_sprite.png",
+        {frameWidth: 90, frameHeight: 90});
+
+        //this.load.image("purple", "asset/ennemi/violet.png");
 
     }
 
@@ -100,17 +135,17 @@ export class overworld extends Phaser.Scene{
         );
 
         // affichage du background
-        this.backgroundParallax = this.add.tileSprite(0,0,5632,1280,"fond0");
-        this.backgroundParallax.setOrigin(0,0);
-        this.backgroundParallax.setScrollFactor(1,1);
+        this.backgroundParallax0 = this.add.tileSprite(0,0,5632,1280,"fond0");
+        this.backgroundParallax0.setOrigin(0,0);
+        this.backgroundParallax0.setScrollFactor(1,1);
     
-        this.quatriemePlanParallax = this.add.tileSprite(0,0,5632,1280,"fond1");
-        this.quatriemePlanParallax.setOrigin(0,0);
-        this.quatriemePlanParallax.setScrollFactor(0.75,1);
+        this.quatriemePlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond1");
+        this.quatriemePlanParallax0.setOrigin(0,0);
+        this.quatriemePlanParallax0.setScrollFactor(0.75,1);
     
-        this.troisiemePlanParallax = this.add.tileSprite(0,0,5632,1280,"fond2");
-        this.troisiemePlanParallax.setOrigin(0,0);
-        this.troisiemePlanParallax.setScrollFactor(0.5,1);
+        this.troisiemePlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond2");
+        this.troisiemePlanParallax0.setOrigin(0,0);
+        this.troisiemePlanParallax0.setScrollFactor(0.5,1);
 
         // affichage des calques
         calque_sol = carteOverworld.createLayer(
@@ -154,14 +189,14 @@ export class overworld extends Phaser.Scene{
         if (this.entrance == 'win1'){
             ferme_2.setVisible(false);
             lvl2Dispo = true;
-            spawnX = 768;
+            spawnX = 1152;
         }
 
         if (this.entrance == 'win2'){
             ferme_2.setVisible(false);
             ferme_3.setVisible(false);
             lvl3Dispo = true;
-            spawnX = 1408
+            spawnX = 2368;
         }
 
         if (this.entrance == 'win3'){
@@ -169,29 +204,29 @@ export class overworld extends Phaser.Scene{
             ferme_3.setVisible(false);
             ferme_4.setVisible(false);
             lvl4Dispo = true;
-            spawnX = 2048
+            spawnX = 3584;
         }
 
         if (this.entrance == 'loose1'){
-            spawnX = 768;
+            spawnX = 1152;
         }
 
         if (this.entrance == 'loose2'){
             ferme_2.setVisible(false);
-            spawnX = 1408;
+            spawnX = 2368;
         }
 
         if (this.entrance == 'loose3'){
             ferme_2.setVisible(false);
             ferme_3.setVisible(false);
-            spawnX = 2048;
+            spawnX = 3584;
         }
 
         if (this.entrance == 'loose4'){
             ferme_2.setVisible(false);
             ferme_3.setVisible(false);
             ferme_4.setVisible(false);
-            spawnX = 2688;
+            spawnX = 4800;
         }
 
         if(lvl2Dispo == true){
@@ -225,6 +260,77 @@ export class overworld extends Phaser.Scene{
             key: 'droite',
             frames: this.anims.generateFrameNumbers('persoBase', {start:9,end:42}),
             frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'idle_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:0,end:8}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'droite_vitesse',
+            frames: this.anims.generateFrameNumbers('persoVitesse', {start:9,end:42}),
+            frameRate: 40,
+            repeat: -1
+        });
+
+        // créer les animations des ennemis
+        this.anims.create({
+            key: 'marche_rouge',
+            frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_bleu',
+            frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_vert',
+            frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
+            frameRate: 75,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'marche_violet',
+            frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
+            frameRate: 75,
             repeat: -1
         });
 
