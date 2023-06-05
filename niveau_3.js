@@ -320,7 +320,7 @@ export class niveau_3 extends Phaser.Scene {
         this.music = this.sound.add("musique",{loop:true});
         this.music_tableau=this.sound.add("musique_tableau",{loop:true});
         this.music_titre=this.sound.add("musique_titre",{loop:true});
-        this.music_victoire=this.sound.add("musique_victoire",{loop:true});
+        this.music_victoire=this.sound.add("musique_victoire",{loop:false});
         this.shoot=this.sound.add("shoot",{loop:false});
         this.transform = this.sound.add("transformation",{loop:false});
         this.vol=this.sound.add("vol",{loop:false});
@@ -741,6 +741,8 @@ export class niveau_3 extends Phaser.Scene {
             distanceObtenu = true;
 
             this.music.stop();
+
+            this.lootbox.setVolume(0);
             
         }
 
