@@ -74,7 +74,7 @@ var tempsSaut = 1
 var hauteurSaut = 1000
 
 var cooldownCoup = 1500
-var porteCoup = 115
+var porteCoup = 150
 
 var cooldownAtterrissage = 5000
 var tempsAtterrissage = 500
@@ -293,6 +293,8 @@ export class niveau_2 extends Phaser.Scene {
     // création du niveau
     create() {
 
+        this.attaque_anim=false;
+
         aller = true;
         retour = false;
 
@@ -474,6 +476,20 @@ export class niveau_2 extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'attaque_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:43,end:52}),
+            frameRate: 50,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'attaque_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:43,end:52}),
+            frameRate: 50,
+            repeat: 0
+        });
+
 
         // affichage des plateformes mobiles
         position_plateforme=carteNiveau2.getObjectLayer("plateforme_spawn")
@@ -640,28 +656,28 @@ export class niveau_2 extends Phaser.Scene {
         this.anims.create({
             key: 'marche_rouge',
             frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_bleu',
             frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 20,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_vert',
             frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_violet',
             frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
@@ -683,6 +699,18 @@ export class niveau_2 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_B,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_C,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemiD,null,this);
+
+        this.physics.add.collider(munitionEnnemi,calque_sol, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_plateforme, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_bleu, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_rouge, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_vert, this.destructionBalle, null, this);
+
+        this.physics.add.collider(munition,calque_sol, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_plateforme, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_bleu, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_rouge, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_vert, this.destructionBalle2, null, this);
 
         // afficher les collectables
         objCombat = this.physics.add.image(5440, 768, "objCombat");
@@ -730,6 +758,9 @@ export class niveau_2 extends Phaser.Scene {
 
         this.physics.add.collider(batterie, calque_sol);
         this.physics.add.collider(batterie, calque_plateforme);
+        this.physics.add.collider(batterie, calque_mur_rouge);
+        this.physics.add.collider(batterie, calque_mur_vert);
+        this.physics.add.collider(batterie, calque_mur_bleu);
 
         // faire en sorte que le joueur puisse ramasser les collectables
         this.physics.add.overlap(player, objCombat, this.collecteCombat, null, this);
@@ -839,11 +870,95 @@ export class niveau_2 extends Phaser.Scene {
             frames: [{ key: 'niveauVie' , frame :  4}],
         })
 
+        groupe_ennemi_A.getChildren().forEach(function(enemy){
+
+            this.time.addEvent({
+                delay: 3000,
+                repeat: -1,
+                callback : function (){
+                    //enemy.setFlipX(!enemy.flipX);
+                    enemy.flipX=true;
+                }
+            });
+            
+            this.time.addEvent({
+                delay: 6000,
+                repeat: -1,
+                callback : function (){
+                    enemy.flipX=false;
+                }
+            });
+            
+
+        },this)
+
         
     }
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
+
+        munitionEnnemi.getChildren().forEach(function(ammo){
+
+            if (ammo.body.velocity.x <= 0){
+                ammo.flipX = false;
+            }
+
+            if (ammo.body.velocity.x >= 0){
+                ammo.flipX = true;
+            }
+
+
+        },this)
+
+        groupe_ennemi_A.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x <= 0){
+                //enemy.flipX = false;
+                enemy.play('marche_rouge', true);
+            }
+
+            /*
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_rouge', true);
+            }
+            */
+
+        },this)
+
+        groupe_ennemi_B.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_bleu', true);
+            }
+
+            if (enemy.body.velocity.x <= 0){
+                enemy.flipX = false;
+                enemy.play('marche_bleu', true);
+            }
+
+        },this)
+
+        groupe_ennemi_C.getChildren().forEach(function(enemy){
+            enemy.play('marche_vert',true);
+
+        },this)
+
+        groupe_ennemi_D.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_violet', true);
+            }
+
+            if (enemy.body.velocity.x <= 0){
+                enemy.flipX = false;
+                enemy.play('marche_violet', true);
+            }
+
+        },this)
 
         // definir le comportement des plateformes
         if(plateforme.children.entries[2].x >= 7808){
@@ -960,16 +1075,16 @@ export class niveau_2 extends Phaser.Scene {
             lockTouche=false
             player.flipX = true;
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true){
+            if(combat==true&& this.attaque_anim==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('droite_vitesse', true);
             }
         }
@@ -979,16 +1094,16 @@ export class niveau_2 extends Phaser.Scene {
             lockTouche=false
             player.flipX = false;
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true){
+            if(combat==true&& this.attaque_anim==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('droite_vitesse', true);
             }
 
@@ -997,16 +1112,16 @@ export class niveau_2 extends Phaser.Scene {
                  //vitesse nulle
             platformTouch = true
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true){
+            if(combat==true&& this.attaque_anim==false){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('idle_vitesse', true);
             }
             //player.anims.play('turn'); //animation fait face caméra
@@ -1014,16 +1129,16 @@ export class niveau_2 extends Phaser.Scene {
         else{
             player.setVelocityX(0);
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true){
+            if(combat==true&& this.attaque_anim==false){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('idle_vitesse', true);
             }
         }
@@ -1224,6 +1339,9 @@ export class niveau_2 extends Phaser.Scene {
             capa_Coup.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activCoup;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_combat', true);
+
             groupe_ennemi_A.getChildren().forEach(function(enemy){
                 distanceKillA = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
 
@@ -1255,6 +1373,11 @@ export class niveau_2 extends Phaser.Scene {
                     this.frappeEnnemiD(enemy);
                 }
             },this)
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(400, () => {
+                this.attaque_anim=false;
+            });
 
 
             // réglage du cooldown de la capacité
@@ -1352,6 +1475,9 @@ export class niveau_2 extends Phaser.Scene {
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_distance', true);
+
             munition.create(player.x, player.y, "projectile").body.setVelocityX(vitesseTir);
 
             // réglage de la durée de la capacité
@@ -1364,6 +1490,11 @@ export class niveau_2 extends Phaser.Scene {
             this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
+            });
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(300, () => {
+                this.attaque_anim=false;
             });
         }
 
@@ -1379,6 +1510,9 @@ export class niveau_2 extends Phaser.Scene {
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_distance', true);
+
             munition.create(player.x, player.y, "projectile").body.setVelocityX(-vitesseTir);
 
             // réglage de la durée de la capacité
@@ -1391,6 +1525,11 @@ export class niveau_2 extends Phaser.Scene {
             this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
+            });
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(300, () => {
+                this.attaque_anim=false;
             });
         }
 
@@ -1889,6 +2028,14 @@ export class niveau_2 extends Phaser.Scene {
             });
         }
 
+    }
+
+    destructionBalle(balle){
+        balle.destroy();
+    }
+
+    destructionBalle2(balle){
+        balle.destroy();
     }
 
 

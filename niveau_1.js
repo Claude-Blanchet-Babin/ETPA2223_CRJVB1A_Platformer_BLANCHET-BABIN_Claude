@@ -74,7 +74,7 @@ var tempsSaut = 1
 var hauteurSaut = 1000
 
 var cooldownCoup = 1500
-var porteCoup = 115
+var porteCoup = 150
 
 var cooldownAtterrissage = 5000
 var tempsAtterrissage = 500
@@ -203,6 +203,10 @@ export class niveau_1 extends Phaser.Scene {
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
     preload() {
 
+        // chargement du son
+        this.load.audio("musique","asset/son/musique.mp3");
+        this.load.audio("transformation","asset/son/transformation.mp3");
+
         // chargement du background
         this.load.image("fond0_lvl1", "asset/niveau1/background_0.1.png");
         this.load.image("fond1_lvl1", "asset/niveau1/background_1.1.png");
@@ -297,6 +301,13 @@ export class niveau_1 extends Phaser.Scene {
 
     // création du niveau
     create() {
+
+        this.attaque_anim=false;
+
+        this.music = this.sound.add("musique",{loop:true});
+        //this.music.play();
+
+        this.transform = this.sound.add("transformation",{loop:false});
 
         aller = true;
         retour = false;
@@ -479,6 +490,20 @@ export class niveau_1 extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'attaque_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:43,end:52}),
+            frameRate: 50,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'attaque_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:43,end:52}),
+            frameRate: 50,
+            repeat: 0
+        });
+
 
         // affichage des ennemis
         // créer un groupe d'ennemi à partir d'un calque
@@ -525,6 +550,7 @@ export class niveau_1 extends Phaser.Scene {
 
         // gauche droite
 
+        //0
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[0],
             x: 1664,
@@ -533,6 +559,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[0].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[0].flipX=false;
+            }
+        });
+        */
+
+        //1
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[1],
             x: 1856,
@@ -541,6 +585,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[1].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[1].flipX=false;
+            }
+        });
+        */
+
+        //2
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[2],
             x: 2176,
@@ -549,6 +611,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[2].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[2].flipX=false;
+            }
+        });
+        */
+
+        //4
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[4],
             x: 3072,
@@ -557,6 +637,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[4].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[4].flipX=false;
+            }
+        });
+        */
+
+        //8
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[8],
             x: 8064,
@@ -565,6 +663,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[8].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[8].flipX=false;
+            }
+        });
+        */
+
+        //9
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[9],
             x: 8064,
@@ -573,6 +689,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[9].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[9].flipX=false;
+            }
+        });
+        */
+
+        //10
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[10],
             x: 8000,
@@ -581,6 +715,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[10].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[10].flipX=false;
+            }
+        });
+        */
+
+        //11
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[11],
             x: 7680,
@@ -589,6 +741,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[11].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[11].flipX=false;
+            }
+        });
+        */
+
+        //12
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[12],
             x: 7616,
@@ -597,6 +767,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[12].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[12].flipX=false;
+            }
+        });
+        */
+
+        //13
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[13],
             x: 7616,
@@ -605,6 +793,24 @@ export class niveau_1 extends Phaser.Scene {
             yoyo : true
         });
 
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[13].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[13].flipX=false;
+            }
+        });
+        */
+
+        //14
         this.tweens.add({
             targets : groupe_ennemi_A.children.entries[14],
             x: 8384,
@@ -612,6 +818,23 @@ export class niveau_1 extends Phaser.Scene {
             repeat : -1,
             yoyo : true
         });
+
+        /*
+        this.time.addEvent({
+            delay: 3000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[14].flipX=true;
+            }
+        });
+        this.time.addEvent({
+            delay: 6000,
+            repeat: -1,
+            callback : function (){
+                groupe_ennemi_A.children.entries[14].flipX=false;
+            }
+        });
+        */
 
         console.log(groupe_ennemi_A.children.entries[0]);
 
@@ -653,14 +876,14 @@ export class niveau_1 extends Phaser.Scene {
         this.anims.create({
             key: 'marche_rouge',
             frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_bleu',
             frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
-            frameRate: 30,
+            frameRate: 20,
             repeat: -1
         });
 
@@ -674,7 +897,7 @@ export class niveau_1 extends Phaser.Scene {
         this.anims.create({
             key: 'marche_violet',
             frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
@@ -697,6 +920,18 @@ export class niveau_1 extends Phaser.Scene {
         this.physics.add.overlap(munition,groupe_ennemi_B,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_C,this.degatEnnemi,null,this);
         this.physics.add.overlap(munition,groupe_ennemi_D,this.degatEnnemiD,null,this);
+
+        this.physics.add.collider(munitionEnnemi,calque_sol, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_plateforme, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_bleu, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_rouge, this.destructionBalle, null, this);
+        this.physics.add.collider(munitionEnnemi,calque_mur_vert, this.destructionBalle, null, this);
+
+        this.physics.add.collider(munition,calque_sol, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_plateforme, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_bleu, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_rouge, this.destructionBalle2, null, this);
+        this.physics.add.collider(munition,calque_mur_vert, this.destructionBalle2, null, this);
 
         // afficher les collectables
         objCombat = this.physics.add.image(1728, 780, "objCombat");
@@ -744,6 +979,9 @@ export class niveau_1 extends Phaser.Scene {
 
         this.physics.add.collider(batterie, calque_sol);
         this.physics.add.collider(batterie, calque_plateforme);
+        this.physics.add.collider(batterie, calque_mur_rouge);
+        this.physics.add.collider(batterie, calque_mur_vert);
+        this.physics.add.collider(batterie, calque_mur_bleu);
 
         // faire en sorte que le joueur puisse ramasser les collectables
         this.physics.add.overlap(player, objCombat, this.collecteCombat, null, this);
@@ -858,11 +1096,105 @@ export class niveau_1 extends Phaser.Scene {
             frames: [{ key: 'niveauVie' , frame :  4}],
         })
 
+        groupe_ennemi_A.getChildren().forEach(function(enemy){
+
+            this.time.addEvent({
+                delay: 3000,
+                repeat: -1,
+                callback : function (){
+                    //enemy.setFlipX(!enemy.flipX);
+                    enemy.flipX=true;
+                }
+            });
+            
+            this.time.addEvent({
+                delay: 6000,
+                repeat: -1,
+                callback : function (){
+                    enemy.flipX=false;
+                }
+            });
+            
+
+        },this)
+
         
     }
 
     // mise à jour des éléments au fil de l'avancement du joueur dans le niveau
     update() {
+
+        munitionEnnemi.getChildren().forEach(function(ammo){
+
+            if (ammo.body.velocity.x <= 0){
+                ammo.flipX = false;
+            }
+
+            if (ammo.body.velocity.x >= 0){
+                ammo.flipX = true;
+            }
+
+
+        },this)
+
+        groupe_ennemi_A.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x <= 0){
+                //enemy.flipX = false;
+                enemy.play('marche_rouge', true);
+            }
+
+            /*
+            this.time.addEvent({
+                delay: 6000,
+                repeat: -1,
+                callback : function (){
+                    enemy.flipX=false;
+                }
+            });
+            */
+
+            /*
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_rouge', true);
+            }
+            */
+
+        },this)
+
+        groupe_ennemi_B.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_bleu', true);
+            }
+
+            if (enemy.body.velocity.x <= 0){
+                enemy.flipX = false;
+                enemy.play('marche_bleu', true);
+            }
+
+        },this)
+
+        groupe_ennemi_C.getChildren().forEach(function(enemy){
+            enemy.play('marche_vert',true);
+
+        },this)
+
+        groupe_ennemi_D.getChildren().forEach(function(enemy){
+
+            if (enemy.body.velocity.x >= 0){
+                enemy.flipX = true;
+                enemy.play('marche_violet', true);
+            }
+
+            if (enemy.body.velocity.x <= 0){
+                enemy.flipX = false;
+                enemy.play('marche_violet', true);
+            }
+
+        },this)
 
         // definir le comportement des plateformes
 
@@ -1173,21 +1505,24 @@ export class niveau_1 extends Phaser.Scene {
         console.log(playerLife)
 
         // ajout des moyens de déplacement du personnage
+
+        
+
         if (cursors.left.isDown){ //si la touche gauche est appuyée
             player.setVelocityX(- playerVitesse); //alors vitesse négative en X
             lockTouche=false
             player.flipX = true;
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true){
+            if(combat==true && this.attaque_anim==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('droite_vitesse', true);
             }
         }
@@ -1197,16 +1532,16 @@ export class niveau_1 extends Phaser.Scene {
             lockTouche=false
             player.flipX = false;
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true){
+            if(combat==true && this.attaque_anim==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('droite_vitesse', true);
             }
 
@@ -1215,16 +1550,16 @@ export class niveau_1 extends Phaser.Scene {
                  //vitesse nulle
             platformTouch = true
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true){
+            if(combat==true && this.attaque_anim==false){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('idle_vitesse', true);
             }
             //player.anims.play('turn'); //animation fait face caméra
@@ -1232,16 +1567,16 @@ export class niveau_1 extends Phaser.Scene {
         else{
             player.setVelocityX(0);
 
-            if(basique==true){
+            if(basique==true&& this.attaque_anim==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true){
+            if(combat==true && this.attaque_anim==false){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true){
+            if(distance==true&& this.attaque_anim==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true){
+            if(vitesse==true&& this.attaque_anim==false){
                 player.anims.play('idle_vitesse', true);
             }
         }
@@ -1272,18 +1607,26 @@ export class niveau_1 extends Phaser.Scene {
 
         // lancer le changement d'armure
         if (a.isDown && vitesseObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
+            this.transform.setVolume(0.1);
             this.armureVitesse();
         }
 
         if (z.isDown && combatObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
+            this.transform.setVolume(0.1);
             this.armureCombat();
         }
 
         if (e.isDown && distanceObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
+            this.transform.setVolume(0.1);
             this.armureDistance();
         }
 
         if (r.isDown) {
+            this.transform.play();
+            this.transform.setVolume(0.1);
             this.formeBasique();
         }
 
@@ -1443,6 +1786,9 @@ export class niveau_1 extends Phaser.Scene {
             capa_Coup.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activCoup;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_combat', true);
+
             groupe_ennemi_A.getChildren().forEach(function(enemy){
                 distanceKillA = Phaser.Math.Distance.Between(player.x, player.y, enemy.x, enemy.y);
 
@@ -1475,6 +1821,10 @@ export class niveau_1 extends Phaser.Scene {
                 }
             },this)
 
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(400, () => {
+                this.attaque_anim=false;
+            });
 
             // réglage du cooldown de la capacité
             this.time.delayedCall(cooldownCoup, () => {
@@ -1571,6 +1921,9 @@ export class niveau_1 extends Phaser.Scene {
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_distance', true);
+
             munition.create(player.x, player.y, "projectile").body.setVelocityX(vitesseTir);
 
             // réglage de la durée de la capacité
@@ -1583,6 +1936,11 @@ export class niveau_1 extends Phaser.Scene {
             this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
+            });
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(300, () => {
+                this.attaque_anim=false;
             });
         }
 
@@ -1598,6 +1956,9 @@ export class niveau_1 extends Phaser.Scene {
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
 
+            this.attaque_anim=true;
+            player.anims.play('attaque_distance', true);
+
             munition.create(player.x, player.y, "projectile").body.setVelocityX(-vitesseTir);
 
             // réglage de la durée de la capacité
@@ -1610,6 +1971,11 @@ export class niveau_1 extends Phaser.Scene {
             this.time.delayedCall(cooldownTir, () => {
                 cld_Tir = false;
                 capa_Tir.alpha = 1;
+            });
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(300, () => {
+                this.attaque_anim=false;
             });
         }
 
@@ -2108,6 +2474,14 @@ export class niveau_1 extends Phaser.Scene {
             });
         }
 
+    }
+
+    destructionBalle(balle){
+        balle.destroy();
+    }
+
+    destructionBalle2(balle){
+        balle.destroy();
     }
 
 

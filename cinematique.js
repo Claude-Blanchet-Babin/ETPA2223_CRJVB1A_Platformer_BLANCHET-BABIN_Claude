@@ -171,32 +171,46 @@ export class cinematique extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'attaque_combat',
+            frames: this.anims.generateFrameNumbers('persoCombat', {start:43,end:52}),
+            frameRate: 50,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'attaque_distance',
+            frames: this.anims.generateFrameNumbers('persoDistance', {start:43,end:52}),
+            frameRate: 50,
+            repeat: 0
+        });
+
         // créer les animations des ennemis
         this.anims.create({
             key: 'marche_rouge',
             frames: this.anims.generateFrameNumbers('red', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_bleu',
             frames: this.anims.generateFrameNumbers('blue', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 20,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_vert',
             frames: this.anims.generateFrameNumbers('green', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'marche_violet',
             frames: this.anims.generateFrameNumbers('purple', {start:0,end:9}),
-            frameRate: 75,
+            frameRate: 60,
             repeat: -1
         });
 
