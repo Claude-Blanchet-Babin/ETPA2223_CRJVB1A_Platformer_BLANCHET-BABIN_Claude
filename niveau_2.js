@@ -69,18 +69,18 @@ var cooldownDash = 3000
 var tempsDash = 200
 var vitesseDash = 1000
 
-var cooldownSaut = 3000
+var cooldownSaut = 2500
 var tempsSaut = 1
 var hauteurSaut = 1000
 
-var cooldownCoup = 1500
-var porteCoup = 150
+var cooldownCoup = 1000
+var porteCoup = 140
 
 var cooldownAtterrissage = 5000
-var tempsAtterrissage = 500
+var tempsAtterrissage = 350
 var vitesseAtterrissage = 3000
 
-var cooldownTir = 1000
+var cooldownTir = 1500
 var vitesseTir = 900
 var tempsRecul = 10
 var vitesseRecul = 1000
@@ -201,6 +201,22 @@ export class niveau_2 extends Phaser.Scene {
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
     preload() {
 
+        // chargement du son
+        this.load.audio("atterrir","asset/son/atterrir.mp3");
+        this.load.audio("carburant","asset/son/carburant.mp3");
+        this.load.audio("dammage","asset/son/dammage.mp3");
+        this.load.audio("destruction","asset/son/destruction.mp3");
+        this.load.audio("loot","asset/son/loot.mp3");
+        this.load.audio("lootbox","asset/son/lootbox.mp3");
+        this.load.audio("mouvement","asset/son/mouvement.mp3");
+        this.load.audio("musique","asset/son/musique.mp3");
+        this.load.audio("musique_tableau","asset/son/musique_tableau.mp3");
+        this.load.audio("musique_titre","asset/son/musique_titre.mp3");
+        this.load.audio("musique_victoire","asset/son/musique_victoire.mp3");
+        this.load.audio("shoot","asset/son/shoot.mp3");
+        this.load.audio("transformation","asset/son/transformation.mp3");
+        this.load.audio("vol","asset/son/vol.mp3");
+
         // chargement du background
         this.load.image("fond0_lvl2", "asset/niveau2/background_0.2.png");
         this.load.image("fond1_lvl2", "asset/niveau2/background_1.2.png");
@@ -294,6 +310,29 @@ export class niveau_2 extends Phaser.Scene {
     create() {
 
         this.attaque_anim=false;
+
+        this.atterrir=this.sound.add("atterrir",{loop:false});
+        this.carburant=this.sound.add("carburant",{loop:false});
+        this.dammage=this.sound.add("dammage",{loop:false});
+        this.destruction=this.sound.add("destruction",{loop:false});
+        this.loot=this.sound.add("loot",{loop:false});
+        this.lootbox=this.sound.add("lootbox",{loop:false});
+        this.mouvement=this.sound.add("mouvement",{loop:false});
+        this.music = this.sound.add("musique",{loop:true});
+        this.music_tableau=this.sound.add("musique_tableau",{loop:true});
+        this.music_titre=this.sound.add("musique_titre",{loop:true});
+        this.music_victoire=this.sound.add("musique_victoire",{loop:true});
+        this.shoot=this.sound.add("shoot",{loop:false});
+        this.transform = this.sound.add("transformation",{loop:false});
+        this.vol=this.sound.add("vol",{loop:false});
+
+        this.music.play();
+        this.music.setVolume(0.2);
+
+        this.dammage.setVolume(0.5);
+        this.shoot.setVolume(2);
+        this.destruction.setVolume(1.5);
+        this.transform.setVolume(0.6);
 
         aller = true;
         retour = false;
@@ -512,7 +551,7 @@ export class niveau_2 extends Phaser.Scene {
 
         this.tweens.add({
             targets : plateforme.children.entries[1],
-            y: 1152,
+            y: 320,
             duration: 6000,
             repeat : -1,
             yoyo : true
@@ -731,6 +770,8 @@ export class niveau_2 extends Phaser.Scene {
             combatObtenu = true;
             vitesseObtenu = true;
             distanceObtenu = true;
+
+            this.music.stop();
         }
 
         // afficher les batteries à partir d'un calque objet
@@ -1143,6 +1184,9 @@ export class niveau_2 extends Phaser.Scene {
             }
         }
         if (cursors.up.isDown && player.body.blocked.down){
+
+            //this.mouvement.play();
+
             //si touche haut appuyée ET que le perso touche le sol
             player.setVelocityY(-playerSaut); //alors vitesse verticale négative
             lockTouche=false
@@ -1181,14 +1225,17 @@ export class niveau_2 extends Phaser.Scene {
 
         // lancer le changement d'armure
         if (a.isDown && vitesseObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
             this.armureVitesse();
         }
 
         if (z.isDown && combatObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
             this.armureCombat();
         }
 
         if (e.isDown && distanceObtenu == true && this.jaugeValeur < 0 && rechargement == false) {
+            this.transform.play();
             this.armureDistance();
         }
 
@@ -1257,6 +1304,8 @@ export class niveau_2 extends Phaser.Scene {
             capa_Dash.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activDash;
 
+            this.mouvement.play();
+
             // réglage de la durée de la capacité
             this.time.delayedCall(tempsDash, () => {
                 actif_Dash = false;
@@ -1286,6 +1335,8 @@ export class niveau_2 extends Phaser.Scene {
             capa_Dash.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activDash;
 
+            this.mouvement.play();
+
             // réglage de la durée de la capacité
             this.time.delayedCall(tempsDash, () => {
                 actif_Dash = false;
@@ -1313,6 +1364,8 @@ export class niveau_2 extends Phaser.Scene {
             cld_Saut=true;
             capa_Saut.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activSaut;
+
+            this.mouvement.play();
 
             // réglage de la durée de la capacité
             this.time.delayedCall(tempsSaut, () => {
@@ -1395,6 +1448,8 @@ export class niveau_2 extends Phaser.Scene {
             capa_Atterrissage.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activAtterrissage;
 
+            this.atterrir.play();
+
             playerDegat = true;
 
             // réglage de la durée de la capacité
@@ -1475,6 +1530,8 @@ export class niveau_2 extends Phaser.Scene {
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
 
+            this.shoot.play();
+
             this.attaque_anim=true;
             player.anims.play('attaque_distance', true);
 
@@ -1509,6 +1566,8 @@ export class niveau_2 extends Phaser.Scene {
             tir_gauche = true;
             capa_Tir.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activTir;
+
+            this.shoot.play();
 
             this.attaque_anim=true;
             player.anims.play('attaque_distance', true);
@@ -1546,6 +1605,8 @@ export class niveau_2 extends Phaser.Scene {
             capa_Vol.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activVol;
 
+            this.vol.play();
+
             // réglage de la durée de la capacité
             this.time.delayedCall(tempsVol, () => {
                 actif_Vol = false;
@@ -1573,6 +1634,8 @@ export class niveau_2 extends Phaser.Scene {
             combat = false;
             vitesse = false;
             this.jaugeValeur = 0;
+
+            this.carburant.play();
 
             rechargement = true;
 
@@ -1655,16 +1718,25 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     collecteVitesse() {
+
+        this.lootbox.play();
+
         objVitesse.disableBody(true, true);
         vitesseObtenu = true;
     }
 
     collecteCombat() {
+
+        this.lootbox.play();
+
         objCombat.disableBody(true, true);
         combatObtenu = true;
     }
 
     collecteDistance() {
+
+        this.lootbox.play();
+
         objDistance.disableBody(true, true);
         distanceObtenu = true;
     }
@@ -1755,12 +1827,14 @@ export class niveau_2 extends Phaser.Scene {
 
     sceneOverworldQuit() {
         if(aller==true){
+            this.music.stop();
             this.scene.start("overworld",{
                 entrance : "loose2"
             })
         }
 
         if(retour==true){
+            this.music.stop();
             this.scene.start("overworld",{
                 entrance : "loose4"
             })
@@ -1768,6 +1842,7 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     sceneOverworldWin() {
+        this.music.stop();
         this.scene.start("overworld",{
             entrance : "win2",
         })
@@ -1775,6 +1850,7 @@ export class niveau_2 extends Phaser.Scene {
 
     sceneNiveau2() {
         if(aller==true){
+            this.music.stop();
             this.scene.start("niveau_2",{
                 transfertVie : 4,
                 entrance : "overworld",
@@ -1782,6 +1858,7 @@ export class niveau_2 extends Phaser.Scene {
         }
 
         if(retour==true){
+            this.music.stop();
             this.scene.start("niveau_2",{
                 transfertVie : 4,
                 entrance : "retour",
@@ -1804,10 +1881,13 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     degat(){
+
         // le joueur perd de la batterie si une armure est active
 
         // vérifier que le cooldown de degat est disponible
         if (playerDegat == false && basique== false){
+
+            this.dammage.play();
             
             // retirer de la vie au joueur
             // répercuter directement dans la jauge de vie
@@ -1841,6 +1921,8 @@ export class niveau_2 extends Phaser.Scene {
         // le joueur perd de la vie s'il n'a pas d'armure
 
         if (playerDegat == false && basique== true){
+
+            this.dammage.play();
             
             // retirer de la vie au joueur
             // répercuter directement dans la jauge de vie
@@ -1873,10 +1955,13 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     degatBalle(player,balle){
+
         // le joueur perd de la batterie si une armure est active
 
         // vérifier que le cooldown de degat est disponible
         if (playerDegat == false && basique== false){
+
+            this.dammage.play();
             
             // retirer de la vie au joueur
             // répercuter directement dans la jauge de vie
@@ -1910,6 +1995,8 @@ export class niveau_2 extends Phaser.Scene {
         // le joueur perd de la vie s'il n'a pas d'armure
 
         if (playerDegat == false && basique== true){
+
+            this.dammage.play();
             
             // retirer de la vie au joueur
             // répercuter directement dans la jauge de vie
@@ -1944,11 +2031,17 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     collecteBatterie(player,batterie){
+
+        this.loot.play();
+
         batterie.disableBody(true, true);
         this.jaugeValeur= this.jaugeValeur - regenBatterie
     }
 
     degatEnnemi (balle,ennemi){
+
+        this.destruction.play();
+
         balle.destroy();
         ennemi.destroy();
 
@@ -1956,6 +2049,9 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     degatEnnemiD (balle,ennemi){
+
+        this.destruction.play();
+
         balle.destroy();
         ennemi.destroy();
 
@@ -1965,12 +2061,18 @@ export class niveau_2 extends Phaser.Scene {
     }
 
     frappeEnnemi (ennemi){
+
+        this.destruction.play();
+
         ennemi.destroy();
 
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);
     }
 
     frappeEnnemiD (ennemi){
+
+        this.destruction.play();
+
         ennemi.destroy();
 
         batterie.create(ennemi.x, ennemi.y, "batterie").body.setGravityY(500);

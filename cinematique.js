@@ -27,6 +27,24 @@ export class cinematique extends Phaser.Scene {
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
     preload() {
 
+        // chargement du son
+        this.load.audio("atterrir","asset/son/atterrir.mp3");
+        this.load.audio("carburant","asset/son/carburant.mp3");
+        this.load.audio("dammage","asset/son/dammage.mp3");
+        this.load.audio("destruction","asset/son/destruction.mp3");
+        this.load.audio("loot","asset/son/loot.mp3");
+        this.load.audio("lootbox","asset/son/lootbox.mp3");
+        this.load.audio("mouvement","asset/son/mouvement.mp3");
+        this.load.audio("musique","asset/son/musique.mp3");
+        this.load.audio("musique_tableau","asset/son/musique_tableau.mp3");
+        this.load.audio("musique_titre","asset/son/musique_titre.mp3");
+        this.load.audio("musique_victoire","asset/son/musique_victoire.mp3");
+        this.load.audio("shoot","asset/son/shoot.mp3");
+        this.load.audio("transformation","asset/son/transformation.mp3");
+        this.load.audio("vol","asset/son/vol.mp3");
+
+        this.load.audio("musique_ending","asset/son/musique_ending.mp3");
+
         // chargement du background et du foreground
         this.load.image("fond_cinematique", "asset/cinematique/background_0.png");
         this.load.image("devant", "asset/cinematique/foreground.png");
@@ -83,6 +101,10 @@ export class cinematique extends Phaser.Scene {
 
     // création du niveau
     create() {
+
+        this.music_ending=this.sound.add("musique_ending",{loop:true});
+        this.music_ending.play();
+        this.music_ending.setVolume(0.7);
 
         // chargement de la carte 
         carteCinematique = this.add.tilemap("carteCinematique");
@@ -305,6 +327,9 @@ export class cinematique extends Phaser.Scene {
 
 
     sceneNiveau4() {
+
+        this.music_ending.stop();
+
         this.scene.start("niveau_4",{
             transfertVie : 4,
             entrance : "retour",

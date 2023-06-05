@@ -55,6 +55,22 @@ export class overworld extends Phaser.Scene{
     // préchargement de tous les éléments nécessaires au fonctionnement de la scène
     preload(){
 
+        // chargement du son
+        this.load.audio("atterrir","asset/son/atterrir.mp3");
+        this.load.audio("carburant","asset/son/carburant.mp3");
+        this.load.audio("dammage","asset/son/dammage.mp3");
+        this.load.audio("destruction","asset/son/destruction.mp3");
+        this.load.audio("loot","asset/son/loot.mp3");
+        this.load.audio("lootbox","asset/son/lootbox.mp3");
+        this.load.audio("mouvement","asset/son/mouvement.mp3");
+        this.load.audio("musique","asset/son/musique.mp3");
+        this.load.audio("musique_tableau","asset/son/musique_tableau.mp3");
+        this.load.audio("musique_titre","asset/son/musique_titre.mp3");
+        this.load.audio("musique_victoire","asset/son/musique_victoire.mp3");
+        this.load.audio("shoot","asset/son/shoot.mp3");
+        this.load.audio("transformation","asset/son/transformation.mp3");
+        this.load.audio("vol","asset/son/vol.mp3");
+
         // chargement du background
         this.load.image("fond0","asset/overworld/background_0.png");
         this.load.image("fond1","asset/overworld/background_1.png");
@@ -124,6 +140,24 @@ export class overworld extends Phaser.Scene{
 
     // création du niveau
     create(){
+
+        this.atterrir=this.sound.add("atterrir",{loop:false});
+        this.carburant=this.sound.add("carburant",{loop:false});
+        this.dammage=this.sound.add("dammage",{loop:false});
+        this.destruction=this.sound.add("destruction",{loop:false});
+        this.loot=this.sound.add("loot",{loop:false});
+        this.lootbox=this.sound.add("lootbox",{loop:false});
+        this.mouvement=this.sound.add("mouvement",{loop:false});
+        this.music = this.sound.add("musique",{loop:true});
+        this.music_tableau=this.sound.add("musique_tableau",{loop:true});
+        this.music_titre=this.sound.add("musique_titre",{loop:true});
+        this.music_victoire=this.sound.add("musique_victoire",{loop:true});
+        this.shoot=this.sound.add("shoot",{loop:false});
+        this.transform = this.sound.add("transformation",{loop:false});
+        this.vol=this.sound.add("vol",{loop:false});
+
+        this.music_tableau.play();
+        this.music_tableau.setVolume(0.7);
 
         // chargement de la carte 
         carteOverworld = this.add.tilemap("carteOverworld");
@@ -407,24 +441,28 @@ export class overworld extends Phaser.Scene{
 
     niveau1(){
         if (enter.isDown && lvl1Dispo == true){
+            this.music_tableau.stop();
             this.sceneNiveau_1();
         }
     }
 
     niveau2(){
         if (enter.isDown && lvl2Dispo == true){
+            this.music_tableau.stop();
             this.sceneNiveau_2();
         }
     }
 
     niveau3(){
         if (enter.isDown && lvl3Dispo == true){
+            this.music_tableau.stop();
             this.sceneNiveau_3();
         }
     }
 
     niveau4(){
         if (enter.isDown && lvl4Dispo == true){
+            this.music_tableau.stop();
             this.sceneNiveau_4();
         }
     }
