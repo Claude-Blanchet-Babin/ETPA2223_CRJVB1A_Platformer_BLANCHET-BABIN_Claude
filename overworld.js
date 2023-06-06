@@ -75,6 +75,9 @@ export class overworld extends Phaser.Scene{
         this.load.image("fond0","asset/overworld/background_0.png");
         this.load.image("fond1","asset/overworld/background_1.png");
         this.load.image("fond2","asset/overworld/background_2.png");
+        this.load.image("fond3","asset/overworld/background_3.png");
+        this.load.image("fond4","asset/overworld/background_4.png");
+        this.load.image("fond5","asset/overworld/background_5.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu","asset/carte/tileset.png");
@@ -200,11 +203,23 @@ export class overworld extends Phaser.Scene{
     
         this.quatriemePlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond1");
         this.quatriemePlanParallax0.setOrigin(0,0);
-        this.quatriemePlanParallax0.setScrollFactor(0.75,1);
+        this.quatriemePlanParallax0.setScrollFactor(0.9,1);
     
         this.troisiemePlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond2");
         this.troisiemePlanParallax0.setOrigin(0,0);
-        this.troisiemePlanParallax0.setScrollFactor(0.5,1);
+        this.troisiemePlanParallax0.setScrollFactor(0.6,1);
+
+        this.secondPlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond3");
+        this.secondPlanParallax0.setOrigin(0,0);
+        this.secondPlanParallax0.setScrollFactor(0.3,1);
+
+        this.premierPlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond4");
+        this.premierPlanParallax0.setOrigin(0,0);
+        this.premierPlanParallax0.setScrollFactor(0.6,1);
+
+        this.firstPlanParallax0 = this.add.tileSprite(0,0,5632,1280,"fond5");
+        this.firstPlanParallax0.setOrigin(0,0);
+        this.firstPlanParallax0.setScrollFactor(0.3,1);
 
         // affichage des calques
         calque_sol = carteOverworld.createLayer(
