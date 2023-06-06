@@ -136,6 +136,31 @@ export class overworld extends Phaser.Scene{
 
         //this.load.image("purple", "asset/ennemi/violet.png");
 
+        this.load.spritesheet("saut_basique", "asset/personnage/saut_basique.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_combat", "asset/personnage/saut_combat.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_distance", "asset/personnage/saut_distance.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_vitesse", "asset/personnage/saut_vitesse.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("atterrissage_anim", "asset/personnage/atterrissage.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("vol_anim", "asset/personnage/vol.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("dash_anim", "asset/personnage/dash.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("double_saut", "asset/personnage/double_saut.png",
+        {frameWidth: 128, frameHeight: 128});
+
+
     }
 
     // création du niveau
@@ -382,6 +407,66 @@ export class overworld extends Phaser.Scene{
             frameRate: 60,
             repeat: -1
         });
+
+
+
+        this.anims.create({
+            key: 'sautbasique',
+            frames: this.anims.generateFrameNumbers('saut_basique', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautcombat',
+            frames: this.anims.generateFrameNumbers('saut_combat', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautdistance',
+            frames: this.anims.generateFrameNumbers('saut_distance', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautvitesse',
+            frames: this.anims.generateFrameNumbers('saut_vitesse', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'atterrissage_combat',
+            frames: this.anims.generateFrameNumbers('atterrissage_anim', {start:0,end:9}),
+            frameRate: 40,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'vol_distance',
+            frames: this.anims.generateFrameNumbers('vol_anim', {start:0,end:9}),
+            frameRate: 20,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'dash_vitesse',
+            frames: this.anims.generateFrameNumbers('dash_anim', {start:0,end:9}),
+            frameRate: 50,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'double_saut_vitesse',
+            frames: this.anims.generateFrameNumbers('double_saut', {start:0,end:9}),
+            frameRate: 50,
+            repeat: 0
+        });
+
+
 
         // création de la détéction du clavier
         cursors = this.input.keyboard.createCursorKeys();

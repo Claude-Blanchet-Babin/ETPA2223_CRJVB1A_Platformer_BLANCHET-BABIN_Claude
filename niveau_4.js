@@ -304,11 +304,36 @@ export class niveau_4 extends Phaser.Scene {
         // chargement des projectiles
         this.load.image("projectile", "asset/objet/projectile.png");
         this.load.image("projectile_ennemi", "asset/objet/projectile_ennemi.png");
+
+        this.load.spritesheet("saut_basique", "asset/personnage/saut_basique.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_combat", "asset/personnage/saut_combat.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_distance", "asset/personnage/saut_distance.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("saut_vitesse", "asset/personnage/saut_vitesse.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("atterrissage_anim", "asset/personnage/atterrissage.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("vol_anim", "asset/personnage/vol.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("dash_anim", "asset/personnage/dash.png",
+        {frameWidth: 128, frameHeight: 128});
+
+        this.load.spritesheet("double_saut", "asset/personnage/double_saut.png",
+        {frameWidth: 128, frameHeight: 128});
     }
 
     // création du niveau
     create() {
         this.attaque_anim=false;
+        this.air=false;
 
         this.atterrir=this.sound.add("atterrir",{loop:false});
         this.carburant=this.sound.add("carburant",{loop:false});
@@ -520,6 +545,64 @@ export class niveau_4 extends Phaser.Scene {
         this.anims.create({
             key: 'attaque_distance',
             frames: this.anims.generateFrameNumbers('persoDistance', {start:43,end:52}),
+            frameRate: 50,
+            repeat: 0
+        });
+
+
+
+        this.anims.create({
+            key: 'sautbasique',
+            frames: this.anims.generateFrameNumbers('saut_basique', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautcombat',
+            frames: this.anims.generateFrameNumbers('saut_combat', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautdistance',
+            frames: this.anims.generateFrameNumbers('saut_distance', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'sautvitesse',
+            frames: this.anims.generateFrameNumbers('saut_vitesse', {start:0,end:9}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'atterrissage_combat',
+            frames: this.anims.generateFrameNumbers('atterrissage_anim', {start:0,end:9}),
+            frameRate: 40,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'vol_distance',
+            frames: this.anims.generateFrameNumbers('vol_anim', {start:0,end:9}),
+            frameRate: 20,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'dash_vitesse',
+            frames: this.anims.generateFrameNumbers('dash_anim', {start:0,end:9}),
+            frameRate: 50,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'double_saut_vitesse',
+            frames: this.anims.generateFrameNumbers('double_saut', {start:0,end:9}),
             frameRate: 50,
             repeat: 0
         });
@@ -1101,16 +1184,16 @@ export class niveau_4 extends Phaser.Scene {
             lockTouche=false
             player.flipX = true;
 
-            if(basique==true&& this.attaque_anim==false){
+            if(basique==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true&& this.attaque_anim==false){
+            if(combat==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true&& this.attaque_anim==false){
+            if(distance==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true&& this.attaque_anim==false){
+            if(vitesse==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_vitesse', true);
             }
         }
@@ -1120,16 +1203,16 @@ export class niveau_4 extends Phaser.Scene {
             lockTouche=false
             player.flipX = false;
 
-            if(basique==true&& this.attaque_anim==false){
+            if(basique==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite', true);
             }
-            if(combat==true&& this.attaque_anim==false){
+            if(combat==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_combat', true);
             }
-            if(distance==true&& this.attaque_anim==false){
+            if(distance==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_distance', true);
             }
-            if(vitesse==true&& this.attaque_anim==false){
+            if(vitesse==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('droite_vitesse', true);
             }
 
@@ -1138,16 +1221,16 @@ export class niveau_4 extends Phaser.Scene {
                  //vitesse nulle
             platformTouch = true
 
-            if(basique==true&& this.attaque_anim==false){
+            if(basique==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true&& this.attaque_anim==false){
+            if(combat==true&& this.attaque_anim==false && this.air==false ){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true&& this.attaque_anim==false){
+            if(distance==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true&& this.attaque_anim==false){
+            if(vitesse==true&& this.attaque_anim==false && this.air==false ){
                 player.anims.play('idle_vitesse', true);
             }
             //player.anims.play('turn'); //animation fait face caméra
@@ -1155,16 +1238,16 @@ export class niveau_4 extends Phaser.Scene {
         else{
             player.setVelocityX(0);
 
-            if(basique==true&& this.attaque_anim==false){
+            if(basique==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle', true);
             }
-            if(combat==true&& this.attaque_anim==false){
+            if(combat==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle_combat', true);
             }
-            if(distance==true&& this.attaque_anim==false){
+            if(distance==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle_distance', true);
             }
-            if(vitesse==true&& this.attaque_anim==false){
+            if(vitesse==true&& this.attaque_anim==false && this.air==false){
                 player.anims.play('idle_vitesse', true);
             }
         }
@@ -1176,6 +1259,32 @@ export class niveau_4 extends Phaser.Scene {
             player.setVelocityY(-playerSaut); //alors vitesse verticale négative
             lockTouche=false
             //(on saute)
+
+            this.air=true;
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(1200, () => {
+                this.air=false;
+            });
+        }
+        
+
+        if (this.air==true){
+            if(basique==true){
+                player.anims.play('sautbasique', true);
+            }
+
+            if(combat==true){
+                player.anims.play('sautcombat', true);
+            }
+
+            if(distance==true){
+                player.anims.play('sautdistance', true);
+            }
+
+            if(vitesse==true){
+                player.anims.play('sautvitesse', true);
+            }
         }
 
         //console.log(platformTouch)
@@ -1291,6 +1400,11 @@ export class niveau_4 extends Phaser.Scene {
             capa_Dash.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activDash;
 
+            this.attaque_anim=true;
+
+            this.air=false;
+            player.anims.play('dash_vitesse', true);
+
             this.mouvement.play();
 
             // réglage de la durée de la capacité
@@ -1298,6 +1412,7 @@ export class niveau_4 extends Phaser.Scene {
                 actif_Dash = false;
                 dash_droit = false;
                 player.setGravityY(playerGravity);
+                this.attaque_anim=false;
             });
 
             // réglage du cooldown de la capacité
@@ -1322,6 +1437,10 @@ export class niveau_4 extends Phaser.Scene {
             capa_Dash.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activDash;
 
+            this.air=false;
+            this.attaque_anim=true;
+            player.anims.play('dash_vitesse', true);
+
             this.mouvement.play();
 
             // réglage de la durée de la capacité
@@ -1329,6 +1448,7 @@ export class niveau_4 extends Phaser.Scene {
                 actif_Dash = false;
                 dash_gauche = false;
                 player.setGravityY(playerGravity);
+                this.attaque_anim=false;
             });
 
             // réglage du cooldown de la capacité
@@ -1352,6 +1472,10 @@ export class niveau_4 extends Phaser.Scene {
             capa_Saut.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activSaut;
 
+            this.air=false;
+            this.attaque_anim=true;
+            player.anims.play('double_saut_vitesse', true);
+
             this.mouvement.play();
 
             // réglage de la durée de la capacité
@@ -1363,6 +1487,11 @@ export class niveau_4 extends Phaser.Scene {
             this.time.delayedCall(cooldownSaut, () => {
                 cld_Saut = false;
                 capa_Saut.alpha = 1;
+            });
+
+            // réglage du cooldown de l'animation
+            this.time.delayedCall(1200, () => {
+                this.attaque_anim=false;
             });
         }
 
@@ -1378,6 +1507,8 @@ export class niveau_4 extends Phaser.Scene {
             cld_Coup = true;
             capa_Coup.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activCoup;
+
+            this.air=false;
 
             this.attaque_anim=true;
             player.anims.play('attaque_combat', true);
@@ -1434,6 +1565,12 @@ export class niveau_4 extends Phaser.Scene {
             capa_Atterrissage.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activAtterrissage;
 
+            this.attaque_anim=true;
+
+            this.air=false;
+
+            player.anims.play('atterrissage_combat', true);
+
             this.atterrir.play();
 
             playerDegat = true;
@@ -1442,6 +1579,8 @@ export class niveau_4 extends Phaser.Scene {
             this.time.delayedCall(tempsAtterrissage, () => {
                 actif_Atterrisage = false;
                 playerDegat = false;
+
+                this.attaque_anim=false;
             });  
 
             // réglage du cooldown de la capacité
@@ -1518,6 +1657,8 @@ export class niveau_4 extends Phaser.Scene {
 
             this.shoot.play();
 
+            this.air=false;
+
             this.attaque_anim=true;
             player.anims.play('attaque_distance', true);
 
@@ -1555,6 +1696,8 @@ export class niveau_4 extends Phaser.Scene {
 
             this.shoot.play();
 
+            this.air=false;
+
             this.attaque_anim=true;
             player.anims.play('attaque_distance', true);
 
@@ -1591,12 +1734,17 @@ export class niveau_4 extends Phaser.Scene {
             capa_Vol.alpha = 0.5;
             this.jaugeValeur = this.jaugeValeur + activVol;
 
+            this.air=false;
+            this.attaque_anim=true;
+            player.anims.play('vol_distance', true);
+
             this.vol.play();
 
             // réglage de la durée de la capacité
             this.time.delayedCall(tempsVol, () => {
                 actif_Vol = false;
                 playerVitesse = majVitesse;
+                this.attaque_anim=false;
             });  
 
             // réglage du cooldown de la capacité
