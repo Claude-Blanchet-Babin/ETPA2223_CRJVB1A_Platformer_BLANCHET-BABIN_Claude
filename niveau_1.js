@@ -224,7 +224,6 @@ export class niveau_1 extends Phaser.Scene {
         this.load.image("fond1_lvl1", "asset/niveau1/background_1.1.png");
         this.load.image("fond2_lvl1", "asset/niveau1/background_2.1.png");
         this.load.image("fond3_lvl1", "asset/niveau1/background_3.1.png");
-        this.load.image("fond4_lvl1", "asset/niveau1/background_4.1.png");
 
         // chargement de la carte
         this.load.image("Phaser_tuilesdejeu", "asset/carte/tileset.png");
@@ -422,19 +421,16 @@ export class niveau_1 extends Phaser.Scene {
     
         this.quatriemePlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond1_lvl1");
         this.quatriemePlanParallax1.setOrigin(0,0);
-        this.quatriemePlanParallax1.setScrollFactor(0.9,1);
+        this.quatriemePlanParallax1.setScrollFactor(0.8,1);
     
         this.troisiemePlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond2_lvl1");
         this.troisiemePlanParallax1.setOrigin(0,0);
-        this.troisiemePlanParallax1.setScrollFactor(0.8,1);
+        this.troisiemePlanParallax1.setScrollFactor(0.9,1);
     
         this.secondPlanParallax1 = this.add.tileSprite(0,0,9600,1280,"fond3_lvl1");
         this.secondPlanParallax1.setOrigin(0,0);
-        this.secondPlanParallax1.setScrollFactor(0.7,1);
+        this.secondPlanParallax1.setScrollFactor(1,1);
     
-        this.premierPlanPrallax1 = this.add.tileSprite(0,0,9600,1280,"fond4_lvl1");
-        this.premierPlanPrallax1.setOrigin(0,0);
-        this.premierPlanPrallax1.setScrollFactor(0.6,1);
 
         // affichage des calques
         calque_sol = carteNiveau1.createLayer(

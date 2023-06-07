@@ -411,19 +411,19 @@ export class niveau_3 extends Phaser.Scene {
     
         this.quatriemePlanParallax3 = this.add.tileSprite(0,0,9600,1280,"fond1_lvl3");
         this.quatriemePlanParallax3.setOrigin(0,0);
-        this.quatriemePlanParallax3.setScrollFactor(0.9,1);
+        this.quatriemePlanParallax3.setScrollFactor(0.6,1);
     
         this.troisiemePlanParallax3 = this.add.tileSprite(0,0,9600,1280,"fond2_lvl3");
         this.troisiemePlanParallax3.setOrigin(0,0);
-        this.troisiemePlanParallax3.setScrollFactor(0.8,1);
+        this.troisiemePlanParallax3.setScrollFactor(0.7,1);
     
         this.secondPlanParallax3 = this.add.tileSprite(0,0,9600,1280,"fond3_lvl3");
         this.secondPlanParallax3.setOrigin(0,0);
-        this.secondPlanParallax3.setScrollFactor(0.7,1);
+        this.secondPlanParallax3.setScrollFactor(0.8,1);
     
         this.premierPlanPrallax3 = this.add.tileSprite(0,0,9600,1280,"fond4_lvl3");
         this.premierPlanPrallax3.setOrigin(0,0);
-        this.premierPlanPrallax3.setScrollFactor(0.6,1);
+        this.premierPlanPrallax3.setScrollFactor(0.9,1);
 
         // affichage des calques
         calque_sol = carteNiveau3.createLayer(

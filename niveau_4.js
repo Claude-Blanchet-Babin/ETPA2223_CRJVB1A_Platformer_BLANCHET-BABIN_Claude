@@ -411,7 +411,7 @@ export class niveau_4 extends Phaser.Scene {
     
         this.quatriemePlanParallax4 = this.add.tileSprite(0,0,9600,1280,"fond1_lvl4");
         this.quatriemePlanParallax4.setOrigin(0,0);
-        this.quatriemePlanParallax4.setScrollFactor(0.9,1);
+        this.quatriemePlanParallax4.setScrollFactor(0.7,1);
     
         this.troisiemePlanParallax4 = this.add.tileSprite(0,0,9600,1280,"fond2_lvl4");
         this.troisiemePlanParallax4.setOrigin(0,0);
@@ -423,7 +423,7 @@ export class niveau_4 extends Phaser.Scene {
     
         this.premierPlanPrallax4 = this.add.tileSprite(0,0,9600,1280,"fond4_lvl4");
         this.premierPlanPrallax4.setOrigin(0,0);
-        this.premierPlanPrallax4.setScrollFactor(0.6,1);
+        this.premierPlanPrallax4.setScrollFactor(0.9,1);
 
         // affichage des calques
         calque_sol = carteNiveau4.createLayer(
