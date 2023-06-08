@@ -21,6 +21,6 @@ A , Z , E : équiper une armure
 
 R : reprendre la forme basique
 
-shift : capacité 1
+espace : capacité 1
 
-espace : capacité 2
+shift : capacité 2
