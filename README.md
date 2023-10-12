@@ -24,6 +24,8 @@ Guide des touches :
 
 souris : naviguer dans les menus
 
+echap (en jeu) : menu pause
+
 flèches directionnelles : se déplacer et sauter
 
 entrer : lancer un niveau depuis la sélection
