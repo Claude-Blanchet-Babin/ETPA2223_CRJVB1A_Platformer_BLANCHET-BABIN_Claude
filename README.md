@@ -5,9 +5,20 @@ Lien jouable
 
 https://claude-blanchet-babin.github.io/ETPA2223_CRJVB1A_Platformer_BLANCHET-BABIN_Claude/
 
-Questionnaire après le test
+
+Questionnaire permettant d'évaluer l'expérience utilisateur du jeu
+
+https://docs.google.com/forms/d/e/1FAIpQLScwkXlKtsK06L5OaDOqfos5MokPPqWR-P1_b8wqZuHjzS0lYw/viewform?usp=sf_link
+
+
+
+
+Questionnaire après le test // Phase de test terminée
 
 https://docs.google.com/forms/d/e/1FAIpQLSdL5OSCdNzE6-QxMWyiJvKs6eanjMPea3JqZa8Zo8zAh_5fLg/viewform?usp=sf_link
+
+
+
 
 Guide des touches :
 
